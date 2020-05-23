@@ -1,6 +1,6 @@
 <div class="container">
     <hr>
-    <h3>Liste des chapitres</h3>
+    <h3>Liste des modules</h3>
     <ul class="list-modules-chapters">
         @foreach ($subject->modules->sortBy('number') as $module)
             <li>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Module;
 use App\Subject;
+use App\Homework;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,17 @@ class ModuleController extends Controller
         );
     }
 
+    public function create_homework(Module $module)
+    {
+        $remaining_homeworks = Homework::pluck('number')->all();
+        return view(
+            'create-module-homework', [
+                'module' => $module,
+                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks)
+            ],
+        );
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -49,6 +61,7 @@ class ModuleController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->input('module_files'));
         $subject = Subject::where('id', $request->input()['subject_id']);
         if($subject->exists())
         {

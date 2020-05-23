@@ -1,15 +1,23 @@
+@extends('layouts.app')
+
+@section('content')
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-sm-12">
             
-            <h4>
-                Ajouter un chapitre a la matiere 
-                {{ $subject->name }} - {{ $subject->classe->name }}
-            </h4>
+            <h4>Ajouter un chapitre a ce module</h4>
+            <h6>Module {{ $module->number }}: {{ $module->title }}</h6>
 
             <form method="POST" action="/chapters">
                 @csrf
+                <div class="form-group">
+                    <input type="text"
+                        name="{{ $module->subject->id }}"
+                        class="form-control" disabled
+                        id="subject-name" 
+                        value="{{ $module->subject->name }} - {{ $module->subject->classe->name }}">
+                </div>
                 <div class="form-group">
                     <input type="text"
                         name="title"
@@ -36,7 +44,7 @@
                 <div class="form-group">
                     <select class="form-control" id="chapter-module" name="module_id">
                         <option>Selectionner le module</option>
-                        @foreach ($subject->modules->sortBy('number') as $module)
+                        @foreach ($module->subject->modules->sortBy('number') as $module)
                             <option value="{{ $module->id }}">
                                 {{ $module->number }}: - {{ $module->title }}
                             </option>
@@ -52,7 +60,7 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <a href="/modules/{{ $subject->id }}/create">Ajouter un module</a>
+                    <a href="{{ route('edit-module', ['module' => $module]) }}">Retour au module</a>
                 </div>
                 <div class="form-group">
                     <a href="{{ route('home') }}">Retour au profile</a>
@@ -60,4 +68,10 @@
             </form>
         </div>
     </div>
+
+    <hr>
+
+    @include('list-of-module-chapters')
+
 </div>
+@endsection

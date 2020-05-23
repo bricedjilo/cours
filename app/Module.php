@@ -23,4 +23,9 @@ class Module extends Model
     {
         return $this->belongsTo('App\Subject');
     }
+
+    public function homeworks() 
+    {
+        return $this->hasMany('App\Homework');
+    }
 }

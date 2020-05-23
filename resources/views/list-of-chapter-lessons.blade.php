@@ -1,11 +1,11 @@
 <div>
-    <h3>Liste des Lessons</h3>
+    <h3>Liste des leçons</h3>
     <ul class="list-of-chapter-lessons">
         
         @foreach ($chapter->lessons->sortBy('number') as $lesson)
             
             <li>
-                <a href="/chapters/{{ $chapter->id }}/edit">
+                <a href="/lessons/{{ $lesson->id }}/edit">
                     Lesson {{ $lesson->number }}: {{ $lesson->title }}
                 </a>
             </li>

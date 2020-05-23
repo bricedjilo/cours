@@ -45,13 +45,8 @@
             </form>
             <hr>
             <div class="form-group">
-                <a href="{{ route('edit-subject', ['subject' => $chapter->module->subject]) }}">
-                    Ajouter un chapitre
-                </a>
-            </div>
-            <div class="form-group">
-                <a href="{{ route('create-module', ['subject' => $chapter->module->subject]) }}">
-                    Ajouter un module
+                <a href="{{ route('edit-chapter', ['chapter' => $chapter]) }}">
+                    Retour au chapitre
                 </a>
             </div>
             <div class="form-group">

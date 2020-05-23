@@ -22,4 +22,9 @@ class Chapter extends Model
         return $this->hasMany('App\Lesson');
     }
 
+    public function homeworks() 
+    {
+        return $this->hasMany('App\Homework');
+    }
+
 }

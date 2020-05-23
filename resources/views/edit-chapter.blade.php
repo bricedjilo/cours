@@ -14,16 +14,7 @@
             <h6>Module {{ $chapter->module->number }}: {{ $chapter->module->title }}</h6>
             <h6>Classe: {{ $chapter->module->subject->classe->name }}</h6>
 
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('errors'))
-                <div class="alert alert-danger">
-                    {{ session('errors') }}
-                </div>
-            @endif
+            @include('error-success-message')
 
             <form id="edit-module" 
                 method="POST" 
@@ -66,19 +57,17 @@
             </form>
             <hr>
             <div class="form-group">
-                <a href="{{ route('create-module', ['subject' => $chapter->module->subject]) }}">
-                    Ajouter un module
-                </a>
-            </div>
-            <div class="form-group">
-                <a href="{{ route('edit-subject', ['subject' => $chapter->module->subject]) }}">
-                    Ajouter un chapitre
-                </a>
-            </div>
-            <div class="form-group">
                 <a href="{{ route('create-lesson', ['chapter' => $chapter]) }}">
-                    Ajouter une lesson
+                    Ajouter une lecon
                 </a>
+            </div>
+            <div class="form-group">
+                <a href="{{ route('create-chapter-homework', ['chapter' => $chapter]) }}">
+                    Ajouter un devoir
+                </a>
+            </div>
+            <div class="form-group">
+                <a href="{{ route('edit-module', ['module' => $chapter->module]) }}">Retour au module</a>
             </div>
             <div class="form-group">
                 <a href="{{ route('home') }}">Retour au profile</a>
@@ -89,6 +78,7 @@
     <hr>
 
     @include('list-of-chapter-lessons')
+    @include('list-of-chapter-homeworks')
 
 </div>
 

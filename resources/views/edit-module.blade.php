@@ -13,16 +13,7 @@
             <h6>Matiere: {{ $module->subject->name }}</h6>
             <h6>Classe: {{ $module->subject->classe->name }}</h6>
 
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('errors'))
-                <div class="alert alert-danger">
-                    {{ session('errors') }}
-                </div>
-            @endif
+            @include('error-success-message')
 
             <form id="edit-module" method="POST" action="{{ route('update-module', ['module' => $module]) }}">
                 @csrf
@@ -62,10 +53,13 @@
             </form>
             <hr>
             <div class="form-group">
-                <a href="{{ route('create-module', ['subject' => $module->subject]) }}">Ajouter un module</a>
+                <a href="{{ route('create-chapter', ['module' => $module]) }}">Ajouter un chapitre</a>
             </div>
             <div class="form-group">
-                <a href="{{ route('edit-subject', ['subject' => $module->subject]) }}">Ajouter un chapitre</a>
+                <a href="{{ route('create-module-homework', ['module' => $module]) }}">Ajouter un devoir</a>
+            </div>
+            <div class="form-group">
+                <a href="{{ route('edit-subject', ['subject' => $module->subject]) }}">Retour a la matiere</a>
             </div>
             <div class="form-group">
                 <a href="{{ route('home') }}">Retour au profile</a>
@@ -76,6 +70,7 @@
     <hr>
 
     @include('list-of-module-chapters')
+    @include('list-of-module-homeworks')
 
 </div>
 

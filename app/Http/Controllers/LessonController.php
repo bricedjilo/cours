@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Lesson;
 use App\Chapter;
+use App\Homework;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class LessonController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,6 +37,17 @@ class LessonController extends Controller
             'create-lesson', [
                 'chapter' => $chapter,
                 'remaining_lessons' => array_diff(range(1, 5), $remaining_lessons)
+            ],
+        );
+    }
+
+    public function create_homework(Lesson $lesson)
+    {
+        $remaining_homeworks = Homework::pluck('number')->all();
+        return view(
+            'create-lesson-homework', [
+                'lesson' => $lesson,
+                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks)
             ],
         );
     }
@@ -80,7 +97,13 @@ class LessonController extends Controller
      */
     public function edit(Lesson $lesson)
     {
-        //
+        $remaining_lessons = Chapter::pluck('number')->all();
+        return view(
+            'edit-lesson', [
+                'lesson' => $lesson,
+                'remaining_lessons' => array_diff(range(1, 5), $remaining_lessons)
+            ],
+        );
     }
 
     /**

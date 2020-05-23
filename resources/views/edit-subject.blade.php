@@ -2,8 +2,8 @@
 
 @section('content')
     
-    @include('create-chapter')
+    @include('create-module')
 
-    @include('list-of-chapters')
+    <!-- @include('list-of-modules') -->
 
 @endsection

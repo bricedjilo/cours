@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Module;
+use App\Homework;
 use App\Chapter;
 
 class ChapterController extends Controller
@@ -33,13 +34,24 @@ class ChapterController extends Controller
      */
     public function create(Module $module)
     {
-        // $remaining_chapters = Module::pluck('number')->all();
-        // return view(
-        //     'create-chapter', [
-        //         'module' => $module,
-        //         'remaining_chapters' => array_diff(range(1, 5), $remaining_chapters)
-        //     ],
-        // );
+        $remaining_chapters = Module::pluck('number')->all();
+        return view(
+            'create-chapter', [
+                'module' => $module,
+                'remaining_chapters' => array_diff(range(1, 5), $remaining_chapters)
+            ],
+        );
+    }
+
+    public function create_homework(Chapter $chapter)
+    {
+        $remaining_homeworks = Homework::pluck('number')->all();
+        return view(
+            'create-chapter-homework', [
+                'chapter' => $chapter,
+                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks)
+            ],
+        );
     }
 
     /**

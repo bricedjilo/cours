@@ -18,4 +18,10 @@ class Lesson extends Model
     {
         return $this->belongsTo('App\Chapter');
     }
+
+    public function homeworks() 
+    {
+        return $this->hasMany('App\Homework');
+    }
+
 }

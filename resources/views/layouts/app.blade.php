@@ -90,4 +90,23 @@
         </main>
     </div>
 </body>
+<script src="{{ URL::asset('js/jquery-2.2.4.min.js') }}" type="text/javascript"></script>
+<script>
+$(function(){
+    // Add the following code if you want the name of the file appear on select
+    $("input#customFile.custom-file-input").on("change", function() {
+        var files = $(this)[0].files;
+        var node = null;
+        var textnode = null;
+        for(var i = 0; i < files.length; i++) {
+            node = document.createElement("LI");
+            textnode = document.createTextNode(files[i].name);
+            node.appendChild(textnode);
+            document.getElementById("file-names").appendChild(node);
+        }
+        
+    });
+});
+</script>
+
 </html>

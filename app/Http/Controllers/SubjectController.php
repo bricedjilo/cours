@@ -64,10 +64,10 @@ class SubjectController extends Controller
      */
     public function edit(Subject $subject)
     {
-        $remaining_chapters = Chapter::pluck('number')->all();
+        $remaining_modules = Module::pluck('number')->all();
         return view('edit-subject', [
             'subject' => $subject,
-            'remaining_chapters' => array_diff(range(1, 20), $remaining_chapters),
+            'remaining_modules' => array_diff(range(1, 20), $remaining_modules),
         ]);
     }
 
