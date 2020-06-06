@@ -4,6 +4,8 @@ use Illuminate\Support\Str;
 
 $DB_URL = getenv("CLEARDB_DATABASE_URL");
 
+dd($DB_URL);
+
 return [
 
     /*
