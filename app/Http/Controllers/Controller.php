@@ -10,4 +10,13 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected function inputDoesNotExist($request, $input_array) {
+        foreach ($input_array as $input) {
+            if(!$request->input()[$input]) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

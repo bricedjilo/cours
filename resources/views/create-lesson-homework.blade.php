@@ -15,7 +15,11 @@
             <h6>Chapitre {{ $lesson->chapter->number }}: {{ $lesson->chapter->title }}</h4>
             <h6>Module {{ $lesson->chapter->module->number }}: {{ $lesson->chapter->module->title }}</h4>
 
-            <form method="POST" action="/homeworks">
+            <form
+                method="POST"
+                action="/homeworks"
+                enctype="multipart/form-data"
+            >
                 @csrf
                 <div class="form-group">
                     <input type="text"
@@ -57,6 +61,26 @@
                         min="2020-05-15"
                         class="form-control">
                 </div>
+
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input 
+                            type="file"
+                            class="custom-file-input"
+                            id="customFile"
+                            name="lesson_hw_files[]"
+                            accept=".pdf,.txt,.jpg,.jpeg,.png"
+                            multiple
+                        >
+                        <label class="custom-file-label" for="customFile">Ajouter un document</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <ul id="file-names"></ul>
+                </div>
+
+                <hr>
+
                 <button type="submit" class="btn btn-primary">Ajouter</button>
                 <a href="{{ route('edit-lesson', ['lesson' => $lesson]) }}" 
                     class="btn btn-secondary">

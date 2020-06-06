@@ -9,7 +9,9 @@
             <h4>Ajouter un chapitre a ce module</h4>
             <h6>Module {{ $module->number }}: {{ $module->title }}</h6>
 
-            <form method="POST" action="/chapters">
+            @include('error-success-message')
+
+            <form method="POST" action="/chapters" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <input type="text"
@@ -41,15 +43,22 @@
                         placeholder="Description du chapitre">
                     </textarea>
                 </div>
+                <input type="hidden" name="module_id" id="module_id" value="{{ $module->id }}">
                 <div class="form-group">
-                    <select class="form-control" id="chapter-module" name="module_id">
-                        <option>Selectionner le module</option>
-                        @foreach ($module->subject->modules->sortBy('number') as $module)
-                            <option value="{{ $module->id }}">
-                                {{ $module->number }}: - {{ $module->title }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="custom-file">
+                        <input 
+                            type="file"
+                            class="custom-file-input"
+                            id="customFile"
+                            name="chapter_files[]"
+                            accept=".pdf,.txt,.jpg,.jpeg,.png"
+                            multiple
+                        >
+                        <label class="custom-file-label" for="customFile">Ajouter un document</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <ul id="file-names"></ul>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Ajouter</button>

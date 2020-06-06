@@ -22,4 +22,9 @@ class Classe extends Model
         return $this->hasMany('App\Subject');
     }
 
+    public function books()
+    {
+        return $this->hasMany('App\Books');
+    }
+
 }

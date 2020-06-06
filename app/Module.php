@@ -28,4 +28,9 @@ class Module extends Model
     {
         return $this->hasMany('App\Homework');
     }
+
+    public function uploadedFiles() 
+    {
+        return $this->hasMany('App\UploadedFile');
+    }
 }

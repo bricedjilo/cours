@@ -16,7 +16,7 @@ class CreateClassesTable extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->uuid('user_id')->unique();
+            $table->uuid('user_id');
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
 

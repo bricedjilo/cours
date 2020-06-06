@@ -27,4 +27,9 @@ class Subject extends Model
         return $this->hasMany('App\Module');
     }
 
+    public function books() 
+    {
+        return $this->hasMany('App\Book');
+    }
+
 }

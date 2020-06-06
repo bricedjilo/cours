@@ -9,17 +9,18 @@
         <div class="col-lg-6 col-sm-12">
             
             <h4>Editer</h4>
-            <h4><b>Lecon {{ $lesson->number }}: {{ $lesson->title }}</b></h4>
-            <h6>Chapter {{ $lesson->chapter->number }}: {{ $lesson->chapter->title }}</h6>
-            <h6>Module {{ $lesson->chapter->module->number }}: {{ $lesson->chapter->module->title }}</h6>
-            <h6>Matiere: {{ $lesson->chapter->module->subject->name }}</h6>
-            <h6>Classe: {{ $lesson->chapter->module->subject->classe->name }}</h6>
+            <h5>Devoir {{ $homework->number }}: {{ $homework->title }}</h5>
+            <h5>Chapter {{ $homework->chapter->number }}: {{ $homework->chapter->title }}</h5>
+            <h5>Moodule {{ $homework->chapter->module->number }}: {{ $homework->chapter->module->title }}</h5>
+            <h6>Matiere: {{ $homework->chapter->module->subject->name }}</h6>
+            <h6>Classe: {{ $homework->chapter->module->subject->classe->name }}</h6> 
 
             @include('error-success-message')
 
-            <form id="edit-lesson" 
-                method="POST" 
-                action="{{ route('update-lesson', ['lesson' => $lesson]) }}"
+            <form 
+                id="edit-chapter-homework"
+                method="POST"
+                action="{{ route('update-homework', ['homework' => $homework]) }}"
                 enctype="multipart/form-data"
             >
                 @csrf
@@ -27,17 +28,37 @@
                     <input type="text"
                         name="title"
                         class="form-control" 
-                        id="lesson-title" 
-                        value="{{ $lesson->title }}">
+                        id="homework-title" 
+                        value="{{ $homework->title }}">
+                </div>
+                <input type="hidden" name="chapter_id" id="chapter_id" value="{{ $homework->chapter->id }}">
+                <div class="form-group">
+                    <textarea 
+                        class="form-control"
+                        name="content"
+                        rows="6"
+                        id="homework-content">
+                        {{ $homework->content }}
+                    </textarea>
                 </div>
                 <div class="form-group">
-                    <select class="form-control" id="lesson-number" name="number">
-                        <option>Numero de la leçon</option>
-                        <option selected>{{ $lesson->chapter->number }}</option>
-                        @foreach ($remaining_lessons as $remaining_lesson)
-                            <option value="{{ $remaining_lesson }}">{{ $remaining_lesson }}</option>
+                    <select class="form-control" id="homework-number" name="number">
+                        <option>Numero du devoir</option>
+                        <option selected>{{ $homework->number }}</option>
+                        @foreach ($remaining_homeworks as $remaining_homework)
+                            <option value="{{ $remaining_homework }}">{{ $remaining_homework }}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Date butoire</label>
+                    <input
+                        type="date"
+                        name="deadline"
+                        max="3000-12-31"
+                        min="2020-05-15"
+                        class="form-control"
+                        value="{{ $homework->deadline }}">
                 </div>
 
                 <div class="form-group">
@@ -46,7 +67,7 @@
                             type="file"
                             class="custom-file-input"
                             id="customFile"
-                            name="lesson_files[]"
+                            name="chapter_hw_files[]"
                             accept=".pdf,.txt,.jpg,.jpeg,.png"
                             multiple
                         >
@@ -56,8 +77,7 @@
 
                 @method('PUT')
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
-
-                <a href="{{ route('edit-subject', ['subject' => $lesson->chapter->module->subject]) }}" 
+                <a href="{{ route('edit-chapter', ['chapter' => $homework->chapter]) }}" 
                     class="btn btn-secondary">
                     Annuler
                 </a>
@@ -65,14 +85,14 @@
 
             <hr>
 
-            <form id="delete-lesson-file" 
-                action="{{ route('delete-lesson-up-file', ['lesson' => $lesson]) }}"
+            <form id="delete-module-hw-file" 
+                action="{{ route('delete-homework-up-file', ['homework' => $homework]) }}"
                 method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="form-group">
                     <ul>
-                        @foreach($lesson->uploadedFiles as $file)
+                        @foreach($homework->uploadedFiles as $file)
                             <input type="hidden" name="up_file_id" value="{{ $file->id }}">
                             <input type="hidden" name="up_file_ext" value="{{ $file->extension }}">
                             <li><a href="{{ $file->url }}" target="_blank">{{ $file->name }}</a>
@@ -91,8 +111,8 @@
 
             <hr>
 
-            <form id="delete-lesson" 
-                action="{{ route('delete-lesson', ['lesson' => $lesson]) }}" 
+            <form id="delete-homework" 
+                action="{{ route('delete-homework', ['homework' => $homework]) }}" 
                 method="POST">
                 @csrf
                 @method('DELETE')
@@ -102,14 +122,7 @@
             </form>
             <hr>
             <div class="form-group">
-                <a href="{{ route('create-lesson-homework', ['lesson' => $lesson]) }}">
-                    Ajouter un devoir
-                </a>
-            </div>
-            <div class="form-group">
-                <a href="{{ route('edit-chapter', ['chapter' => $lesson->chapter]) }}">
-                    Retour au chapitre
-                </a>
+                <a href="{{ route('edit-chapter', ['chapter' => $homework->chapter]) }}">Retour au chapitre</a>
             </div>
             <div class="form-group">
                 <a href="{{ route('home') }}">Retour au profile</a>
@@ -118,8 +131,8 @@
     </div>
 
     <hr>
-
-    @include('list-of-lesson-homeworks')
+    <?php $chapter = $homework->chapter; ?>
+    @include('list-of-chapter-homeworks')
 
 </div>
 

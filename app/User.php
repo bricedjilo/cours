@@ -50,9 +50,9 @@ class User extends Authenticatable
 
     protected $keyType = 'string';
 
-    public function classe()
+    public function classes()
     {
-        return $this->hasOne('App\Classe');
+        return $this->hasMany('App\Classe');
     }
 
     protected static function boot()

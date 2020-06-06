@@ -15,6 +15,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -94,18 +95,29 @@
 <script>
 $(function(){
     // Add the following code if you want the name of the file appear on select
-    $("input#customFile.custom-file-input").on("change", function() {
-        var files = $(this)[0].files;
-        var node = null;
-        var textnode = null;
+    $("input#customFile.custom-file-input").on("change", function(event) {
+        $("#file-names").empty();
+        var files = event.target.files;
+        var li = null;
         for(var i = 0; i < files.length; i++) {
-            node = document.createElement("LI");
-            textnode = document.createTextNode(files[i].name);
-            node.appendChild(textnode);
-            document.getElementById("file-names").appendChild(node);
+            li = $(
+                '<li id="' + i + '">' + files[i].name + 
+                '<button type="submit" class="btn btn-default deleteButton">' +
+                '</button></li>'
+            );
+            li.appendTo("#file-names");
         }
-        
+        // $( ".deleteButton" ).click(function(e) {
+        //     e.stopPropagation();
+        //     e.stopImmediatePropagation();
+        //     var index = $(this).parent().attr('id');
+        //     console.log(index);
+
+        //     $(this).parent().remove();
+        // });
     });
+
+    
 });
 </script>
 

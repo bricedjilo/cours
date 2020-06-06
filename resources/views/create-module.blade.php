@@ -10,7 +10,13 @@
             
             <h4>Ajouter un module</h4>
 
-            <form method="POST" action="/modules">
+            @include('error-success-message')
+            
+            <form
+                method="POST"
+                action="/modules"
+                enctype="multipart/form-data"
+            >
                 @csrf
                 <div class="form-group">
                     <input type="text"
@@ -37,7 +43,14 @@
                 </div>
                 <div class="form-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile" name="module_files" multiple>
+                        <input 
+                            type="file"
+                            class="custom-file-input"
+                            id="customFile"
+                            name="module_files[]"
+                            accept=".pdf,.txt,.jpg,.jpeg,.png"
+                            multiple
+                        >
                         <label class="custom-file-label" for="customFile">Ajouter un document</label>
                     </div>
                 </div>

@@ -7,8 +7,8 @@
             <div class="card">
                 <span class="card-header">
                     Nom: 
-                    {{ $user->first_name }} 
-                    {{ $user->last_name }}
+                    <b>{{ $user->first_name }} 
+                    {{ $user->last_name }}</b>
                 </span>
 
                 <div class="card-body">
@@ -31,22 +31,30 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Classe: </td>
+                                <td>Classe(s): </td>
                                 <td>
-                                @if (!empty($user->classe))
-                                    {{ $user->classe->name }}
+                                @if (!empty($user->classes))
+                                    @foreach($user->classes as $class)
+                                        {{ $class->name }},
+                                    @endforeach
                                 @endif
                                 </td>
                             </tr>
                             <tr>
                                 <td>Matieres: </td>
                                 <td>
-                                    @if (!empty($user->classe))
+                                    @if ($user->classes->count())
                                     <ul>
-                                        @foreach ($classe->subjects as $subject)
-                                            <li><a href="/subjects/{{ $subject->id }}/edit">
-                                                {{ $subject->name }} - {{ $classe->name }}
-                                            </a></li>
+                                        @foreach ($user->classes as $class)
+                                            @if($class->subjects->count())
+                                                @foreach($class->subjects as $subject)
+                                                <li>
+                                                    <a href="/subjects/{{ $subject->id }}/edit">
+                                                        {{ $subject->name }} - {{ $class->name }}
+                                                    </a>
+                                                </li>
+                                                @endforeach
+                                            @endif
                                         @endforeach
                                     </ul>
                                     @endif
@@ -61,12 +69,14 @@
     <hr>
 </div>
 
-@if (!empty($user->classe))
+@if ($user->classes->count())
 <div class="container">
     <div class="row justify-content-center">
-        @foreach ($classe->subjects as $subject)
+        @foreach ($user->classes as $class)
 
-            @include('subject')
+            @foreach ($class->subjects as $subject)
+                @include('subject')
+            @endforeach
 
         @endforeach
     </div>

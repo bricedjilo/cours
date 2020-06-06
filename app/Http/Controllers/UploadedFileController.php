@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\UploadedFile;
 use Illuminate\Http\Request;
-use App\Subject;
-use App\Chapter;
-use App\Module;
 
-class SubjectController extends Controller
+class UploadedFileController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -48,37 +41,33 @@ class SubjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Subject  $subject
+     * @param  \App\UploadedFile  $uploadedFile
      * @return \Illuminate\Http\Response
      */
-    public function show(Subject $subject)
+    public function show(UploadedFile $uploadedFile)
     {
-        return view('subject-details', ['subject' => $subject]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\UploadedFile  $uploadedFile
      * @return \Illuminate\Http\Response
      */
-    public function edit(Subject $subject)
+    public function edit(UploadedFile $uploadedFile)
     {
-        $remaining_modules = Module::pluck('number')->all();
-        return view('edit-subject', [
-            'subject' => $subject,
-            'remaining_modules' => array_diff(range(1, 5), $remaining_modules),
-        ]);
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\UploadedFile  $uploadedFile
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, UploadedFile $uploadedFile)
     {
         //
     }
@@ -86,10 +75,10 @@ class SubjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\UploadedFile  $uploadedFile
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(UploadedFile $uploadedFile)
     {
         //
     }

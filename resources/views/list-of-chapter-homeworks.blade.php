@@ -5,7 +5,7 @@
         @foreach ($chapter->homeworks->sortBy('number') as $homework)
             
             <li>
-                <a href="/homeworks/{{ $homework->id }}/edit">
+                <a href="/homeworks/{{ $homework->id }}/chapter/edit">
                     Devoir {{ $homework->number }}: {{ $homework->title }}
                 </a>
             </li>

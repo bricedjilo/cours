@@ -28,4 +28,9 @@ class Homework extends Model
     {
         return $this->belongsTo('App\Lesson');
     }
+
+    public function uploadedFiles() 
+    {
+        return $this->hasMany('App\UploadedFile');
+    }
 }

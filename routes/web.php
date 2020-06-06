@@ -43,6 +43,9 @@ Route::put('/modules/{module}', 'ModuleController@update')
 Route::delete('/modules/{module}', 'ModuleController@destroy')
     ->name('delete-module')
     ->middleware('check_teacher');
+Route::delete('/modules/{module}/uploaded-files', 'ModuleController@delete_up_file')
+    ->name('delete-module-up-file')
+    ->middleware('check_teacher');
 Route::get('/modules/{module}/homeworks/create', 'ModuleController@create_homework')
     ->name('create-module-homework')
     ->middleware('check_teacher');
@@ -62,8 +65,11 @@ Route::post('/chapters', 'ChapterController@store')
 Route::put('/chapters/{chapter}', 'ChapterController@update')
     ->name('update-chapter')
     ->middleware('check_teacher');
-Route::delete('/chapters/{chapter}', 'ModuleController@destroy')
+Route::delete('/chapters/{chapter}', 'ChapterController@destroy')
     ->name('delete-chapter')
+    ->middleware('check_teacher');
+Route::delete('/chapters/{chapter}/uploaded-files', 'ChapterController@delete_up_file')
+    ->name('delete-chapter-up-file')
     ->middleware('check_teacher');
 
 Route::get('/lessons/{lesson}/edit', 'LessonController@edit')
@@ -81,12 +87,15 @@ Route::get('/lessons/{lesson}/homeworks/create', 'LessonController@create_homewo
 Route::delete('/lessons/{lesson}', 'LessonController@destroy')
     ->name('delete-lesson')
     ->middleware('check_teacher');
-Route::put('/lessons/{lesson}', 'ChapterController@update')
+Route::put('/lessons/{lesson}', 'LessonController@update')
     ->name('update-lesson')
     ->middleware('check_teacher');
+Route::delete('/lessons/{lesson}/uploaded-files', 'LessonController@delete_up_file')
+    ->name('delete-lesson-up-file')
+    ->middleware('check_teacher');
 
-Route::get('/homeworks/{homework}/edit', 'HomeworkController@edit')
-    ->name('edit-homework')
+Route::get('/homeworks/{homework}/{parent}/edit', 'HomeworkController@edit')
+    ->name('edit-mcl-homework')
     ->middleware('check_teacher');
 Route::post('/homeworks', 'HomeworkController@store')
     ->name('store-homeowrk')
@@ -96,4 +105,11 @@ Route::delete('/homeworks/{homework}', 'HomeworkController@destroy')
     ->middleware('check_teacher');
 Route::put('/homeworks/{homework}', 'HomeworkController@update')
     ->name('update-homework')
+    ->middleware('check_teacher');
+Route::delete('/homeworks/{homework}/uploaded-files', 'HomeworkController@delete_up_file')
+    ->name('delete-homework-up-file')
+    ->middleware('check_teacher');
+
+Route::delete('/uploaded-files/{upfile}', 'UploadedFileController@destroy')
+    ->name('delete-uploaded-file')
     ->middleware('check_teacher');

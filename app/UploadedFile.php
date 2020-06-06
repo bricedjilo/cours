@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Lesson extends Model
+
+class UploadedFile extends Model
 {
     protected $guarded = [];
 
@@ -14,19 +15,23 @@ class Lesson extends Model
 
     protected $keyType = 'string';
 
+    public function module() 
+    {
+        return $this->belongsTo('App\Module');
+    }
+
     public function chapter() 
     {
         return $this->belongsTo('App\Chapter');
     }
 
-    public function homeworks() 
+    public function lesson() 
     {
-        return $this->hasMany('App\Homework');
+        return $this->belongsTo('App\Lesson');
     }
 
-    public function uploadedFiles() 
+    public function homework() 
     {
-        return $this->hasMany('App\UploadedFile');
+        return $this->belongsTo('App\Homework');
     }
-
 }
