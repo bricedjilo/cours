@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Str;
 
-$DB_URL = getenv("CLEARDB_DATABASE_URL");
+$DB_URL = env("CLEARDB_DATABASE_URL");
 
 var_dump($DB_URL);
 
