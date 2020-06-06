@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Creer un compte') }}</div>
+                <div class="card-header">{{ __('Create an account') }}</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
@@ -14,7 +14,7 @@
                         <div class="form-group row">
                             <label 
                                 for="first_name" 
-                                class="col-md-4 col-form-label text-md-right">{{ __('Prenom') }}
+                                class="col-md-4 col-form-label text-md-right">{{ __('First Name') }}
                             </label>
 
                             <div class="col-md-6">
@@ -36,7 +36,7 @@
                         <div class="form-group row">
                             <label 
                                 for="last_name" 
-                                class="col-md-4 col-form-label text-md-right">{{ __('Nom') }}
+                                class="col-md-4 col-form-label text-md-right">{{ __('Last Name') }}
                             </label>
 
                             <div class="col-md-6">
@@ -61,7 +61,14 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                <input
+                                    id="email"
+                                    type="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    required autocomplete="email"
+                                >
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -70,6 +77,42 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <fieldset class="form-group">
+                            <div class="row">
+                                <legend
+                                    class="col-form-label col-md-4 col-sm-2 text-md-right pt-0"
+                                >
+                                    {{ __('Status') }}
+                                </legend>
+                                <div class="col-md-6 col-sm-10">
+                                    <div class="form-check">
+                                        <input
+                                            class="form-check-input"
+                                            type="radio"
+                                            name="status"
+                                            id="statut-student"
+                                            value="student"
+                                            checked
+                                        >
+                                        <label class="form-check-label" for="statut-student">
+                                            {{ __('Student') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="statut-prof" value="prof">
+                                        <label class="form-check-label" for="statut-prof">
+                                        {{ __('Professor') }}
+                                        </label>
+                                    </div>
+                                </div>
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </fieldset>
 
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
