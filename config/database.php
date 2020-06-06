@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Str;
 
-$DB_URL = (getenv("CLEARDB_DATABASE_URL"));
-
-print_r($DB_URL[0]);
+$DB_URL = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
 return [
 
