@@ -24,9 +24,9 @@
                                 <td>Statut: </td>
                                 <td>
                                     @if ($user->is_student)
-                                        <div>Eleve</div>
+                                        <div>{{ __('Eleve') }}</div>
                                     @else 
-                                        <div>Professeur</div>
+                                        <div>{{ __('Professeur') }}</div>
                                     @endif
                                 </td>
                             </tr>
