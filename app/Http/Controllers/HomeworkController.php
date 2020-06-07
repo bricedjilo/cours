@@ -294,16 +294,23 @@ class HomeworkController extends Controller
      */
     public function destroy(Homework $homework)
     {
-        $module = $homework->module;
+        $mod_chap_lesson = [];
+        $view = "";
         $up_file_ids = $homework->uploadedFiles;
 
         $folder = "";
         if($homework->lesson_id) {
             $folder = "lesson_hw_files/";
+            $mod_chap_lesson = ['lesson' => $homework->lesson];
+            $view = "edit-lesson";
         } else if($homework->chapter_id) {
             $folder = "chapter_hw_files/";
+            $mod_chap_lesson = ['chapter' => $homework->chapter];
+            $view = "edit-chapter";
         } else {
             $folder = "module_hw_files/";
+            $mod_chap_lesson = ['module' => $homework->module];
+            $view = "edit-module";
         }
 
         try{
@@ -317,7 +324,7 @@ class HomeworkController extends Controller
             Homework::destroy($homework->id);
             DB::commit();
 
-            return redirect()->route('edit-module', ['module' => $module])
+            return redirect()->route($view, $mod_chap_lesson)
                 ->withSuccess("Excellent!!! Le devoir a ete supprime.");
         } catch(Exception $e) {
             DB::rollback();
