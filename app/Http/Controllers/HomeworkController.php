@@ -136,7 +136,7 @@ class HomeworkController extends Controller
 
                 return redirect()
                     ->back()
-                    ->withSuccess('Votre module a ete ajoute.');
+                    ->withSuccess('Votre devoir a ete ajoute.');
             
             } catch(Exception $e) {
                 dd($e);
