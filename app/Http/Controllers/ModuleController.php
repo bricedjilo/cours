@@ -67,6 +67,7 @@ class ModuleController extends Controller
     public function store(Request $request)
     {
         $subject = Subject::where('id', $request->input()['subject_id']);
+        $files = empty($request->module_files) ? [] : $request->module_files;
         if($subject->exists()) # && $request->hasFile('module_files')
         {
             $uuids = [];
@@ -79,7 +80,7 @@ class ModuleController extends Controller
                 }
                 
                 $i = 0;
-                foreach ($request->module_files as $file) {
+                foreach ($files as $file) {
                     if(!$file->isValid()) {
                         return redirect()->back()->withErrors(
                             "L'un de vos fichier n'a pas pu etre ajoute."
@@ -101,7 +102,7 @@ class ModuleController extends Controller
                     $request->input()['subject_id'],
                 ]);
 
-                foreach ($request->module_files as $file) {
+                foreach ($files as $file) {
                     $file->storePubliclyAs(
                         'module_files',
                         $uuids[$i] . "." . $file->getClientOriginalExtension(),
@@ -129,7 +130,7 @@ class ModuleController extends Controller
 
                 $i = 0;
                 if($request->hasFile('module_files')) {
-                    foreach ($request->module_files as $file) {
+                    foreach ($files as $file) {
                         Storage::disk('s3')->delete(
                             'module_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension()
                         );
