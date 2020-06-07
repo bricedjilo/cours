@@ -335,9 +335,9 @@ class HomeworkController extends Controller
                 }
             }
             
-            return redirect()->back()->withErrors([
-                'msg', "Le devoir n'a pas ete supprime. Veillez re-essayer."
-            ]);
+            return redirect()->back()->withErrors(
+                "Le devoir n'a pas ete supprime. Veillez re-essayer."
+            );
         }
     }
 
