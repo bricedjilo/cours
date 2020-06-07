@@ -123,7 +123,7 @@ class LessonController extends Controller
 
                 return redirect()
                     ->back()
-                    ->withSuccess('Votre module a ete ajoute.');
+                    ->withSuccess('Votre lecon a ete ajoute.');
             } catch(Exception $e) {
                 DB::rollback();
 
