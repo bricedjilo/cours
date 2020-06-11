@@ -41,7 +41,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Matieres: </td>
+                                <td>Matiere(s): </td>
                                 <td>
                                     @if ($user->classes->count())
                                     <ul>
