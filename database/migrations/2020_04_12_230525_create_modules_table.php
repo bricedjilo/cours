@@ -17,7 +17,7 @@ class CreateModulesTable extends Migration
             $table->uuid('id')->primary();
             $table->string('title');
             $table->uuid('subject_id');
-            $table->unsignedInteger('number')->unique();
+            $table->unsignedInteger('number');
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
 

@@ -49,7 +49,7 @@ class ModuleController extends Controller
 
     public function create_homework(Module $module)
     {
-        $remaining_homeworks = Homework::pluck('number')->all();
+        $remaining_homeworks = Homework::where('module_id', $module->id)->pluck('number')->all();
         return view(
             'create-module-homework', [
                 'module' => $module,
@@ -78,7 +78,7 @@ class ModuleController extends Controller
                         "Veillez entrer toutes les donnees et re-essayez."
                     ); 
                 }
-                
+    
                 $i = 0;
                 foreach ($files as $file) {
                     if(!$file->isValid()) {
@@ -90,6 +90,8 @@ class ModuleController extends Controller
                 }
 
                 $i = 0;
+
+                // dd($request->input());
 
                 DB::beginTransaction();
 
@@ -167,11 +169,11 @@ class ModuleController extends Controller
      */
     public function edit(Module $module)
     {
-        $remaining_modules = Module::pluck('number')->all();
+        $remaining_modules = Module::where("subject_id", $module->subject->id)->pluck('number')->all();
         return view(
             'edit-module', [
                 'module' => $module,
-                'remaining_modules' => array_diff(range(1, 5), $remaining_modules)
+                'remaining_modules' => array_diff(range(1, 20), $remaining_modules)
             ],
         );
     }

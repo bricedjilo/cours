@@ -183,10 +183,11 @@ class HomeworkController extends Controller
         $view = "edit-module-homework";
         if($parent == "chapter") {
             $view = "edit-chapter-homework";
+            $parent_id = $parent . "_id";
         } elseif($parent == 'lesson') {
             $view = "edit-lesson-homework";
         }
-        $remaining_homeworks = Homework::pluck('number')->all();
+        $remaining_homeworks = Homework::where($parent . "_id", $homework->$parent->id)->pluck('number')->all();
         return view(
             $view, [
                 'homework' => $homework,

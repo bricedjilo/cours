@@ -37,7 +37,7 @@ class ChapterController extends Controller
      */
     public function create(Module $module)
     {
-        $remaining_chapters = Chapter::pluck('number')->all();
+        $remaining_chapters = Chapter::where('module_id', $module->id)->pluck('number')->all();
         return view(
             'create-chapter', [
                 'module' => $module,
@@ -48,7 +48,7 @@ class ChapterController extends Controller
 
     public function create_homework(Chapter $chapter)
     {
-        $remaining_homeworks = Homework::pluck('number')->all();
+        $remaining_homeworks = Homework::where('chapter_id', $chapter->id)->pluck('number')->all();
         return view(
             'create-chapter-homework', [
                 'chapter' => $chapter,
@@ -159,7 +159,7 @@ class ChapterController extends Controller
      */
     public function edit(Chapter $chapter)
     {
-        $remaining_chapters = Chapter::pluck('number')->all();
+        $remaining_chapters = Chapter::where('module_id', $chapter->module->id)->pluck('number')->all();
         return view(
             'edit-chapter', [
                 'chapter' => $chapter,
