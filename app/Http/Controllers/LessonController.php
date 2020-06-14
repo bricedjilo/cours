@@ -41,15 +41,14 @@ class LessonController extends Controller
         return view(
             'create-lesson', [
                 'chapter' => $chapter,
-                'remaining_lessons' => array_diff(range(1, 5), $remaining_lessons)
+                'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons)
             ],
         );
     }
 
     public function create_homework(Lesson $lesson)
     {
-        // $remaining_homeworks = Homework::where('lesson_id', $lesson->id)->pluck('number')->all();
-        $remaining_homeworks = Homework::pluck('number')->all();
+        $remaining_homeworks = Homework::where('lesson_id', $lesson->id)->pluck('number')->all();
         return view(
             'create-lesson-homework', [
                 'lesson' => $lesson,
@@ -172,7 +171,7 @@ class LessonController extends Controller
         return view(
             'edit-lesson', [
                 'lesson' => $lesson,
-                'remaining_lessons' => array_diff(range(1, 5), $remaining_lessons)
+                'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons)
             ],
         );
     }
@@ -293,7 +292,8 @@ class LessonController extends Controller
         }
     }
 
-    public function delete_up_file(Request $request, Lesson $lesson) {
+    public function delete_up_file(Request $request, Lesson $lesson) 
+    {
         try {
             DB::beginTransaction();
             UpFile::where([

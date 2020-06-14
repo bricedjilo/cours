@@ -22,7 +22,6 @@ class CreateChaptersTable extends Migration
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
 
-            $table->unique(['number']);
             $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
         });
     }

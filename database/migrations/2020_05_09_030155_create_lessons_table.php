@@ -21,10 +21,6 @@ class CreateLessonsTable extends Migration
             $table->timestamp('created_at');
             $table->timestamp('updated_at')->nullable();
 
-            $table->unique([
-                'number', 'chapter_id'
-            ]);
-
             $table->foreign('chapter_id')->references('id')->on('chapters')->onDelete('cascade');
         });
     }

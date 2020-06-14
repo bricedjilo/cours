@@ -14,7 +14,7 @@ class AddNumberToHomeworksTable extends Migration
     public function up()
     {
         Schema::table('homeworks', function (Blueprint $table) {
-            $table->unsignedInteger('number')->unique();
+            $table->unsignedInteger('number');
         });
     }
 
