@@ -6,16 +6,16 @@
         <div class="col-lg-6 col-md-10 col-sm-12 col-xs-12">
             <div class="card">
                 <span class="card-header">
-                    Nom: 
-                    <b>{{ $user->first_name }} 
-                    {{ $user->last_name }}</b>
+                    Nom:
+                    <b>{{ $user->first_name }}
+                        {{ $user->last_name }}</b>
                 </span>
 
                 <div class="card-body">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
 
                     <table class="table table-hover">
@@ -24,20 +24,23 @@
                                 <td>Statut: </td>
                                 <td>
                                     @if ($user->is_student)
-                                        <div>{{ __('Eleve') }}</div>
-                                    @else 
-                                        <div>{{ __('Professeur') }}</div>
+                                    <div>{{ __('Eleve') }}</div>
+                                    @else
+                                    <div>{{ __('Professeur') }}</div>
+                                    @if ($user->is_admin)
+                                    <div>{{ __('Administrateur') }}</div>
+                                    @endif
                                     @endif
                                 </td>
                             </tr>
                             <tr>
                                 <td>Classe(s): </td>
                                 <td>
-                                @if (!empty($user->classes))
+                                    @if (!empty($user->classes))
                                     @foreach($user->classes as $class)
-                                        {{ $class->name }},
+                                    {{ $class->name }},
                                     @endforeach
-                                @endif
+                                    @endif
                                 </td>
                             </tr>
                             <tr>
@@ -46,15 +49,15 @@
                                     @if ($user->classes->count())
                                     <ul>
                                         @foreach ($user->classes as $class)
-                                            @if($class->subjects->count())
-                                                @foreach($class->subjects as $subject)
-                                                <li>
-                                                    <a href="/subjects/{{ $subject->id }}/edit">
-                                                        {{ $subject->name }} - {{ $class->name }}
-                                                    </a>
-                                                </li>
-                                                @endforeach
-                                            @endif
+                                        @if($class->subjects->count())
+                                        @foreach($class->subjects as $subject)
+                                        <li>
+                                            <a href="/subjects/{{ $subject->id }}/show">
+                                                {{ $subject->name }} - {{ $class->name }}
+                                            </a>
+                                        </li>
+                                        @endforeach
+                                        @endif
                                         @endforeach
                                     </ul>
                                     @endif
@@ -74,9 +77,9 @@
     <div class="row justify-content-center">
         @foreach ($user->classes as $class)
 
-            @foreach ($class->subjects as $subject)
-                @include('subject')
-            @endforeach
+        @foreach ($class->subjects as $subject)
+        @include('subject')
+        @endforeach
 
         @endforeach
     </div>
