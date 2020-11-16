@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Subject;
-use App\Chapter;
 use App\Module;
+use App\Subject;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubjectController extends Controller
 {
@@ -53,7 +53,12 @@ class SubjectController extends Controller
      */
     public function show(Subject $subject)
     {
-        return view('subject-details', ['subject' => $subject]);
+        $user = Auth::user();
+        return view('show-subject', [
+            'subject' => $subject,
+            'user' => $user,
+        ]
+        );
     }
 
     /**
