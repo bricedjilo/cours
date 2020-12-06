@@ -48,6 +48,7 @@
                                 <td>
                                     @if ($user->classes->count())
                                     <ul>
+                                        @if ($user->is_teacher)
                                         @foreach ($user->classes as $class)
                                         @if($class->subjects->count())
                                         @foreach($class->subjects as $subject)
@@ -59,6 +60,7 @@
                                         @endforeach
                                         @endif
                                         @endforeach
+                                        @endif
                                     </ul>
                                     @endif
                                 </td>
