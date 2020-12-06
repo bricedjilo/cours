@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Classe;
+use App\Subject;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -25,10 +26,24 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $classe = $user->classe;
-        return view('home', [
-            'classe' => $classe ? $classe : [],
-            'user' => $user
-        ]);
+        if ($user->is_teacher) {
+            $classes = $user->classes;
+            return view('home-teacher', [
+                'classe' => $classes ? $classes : [],
+                'user' => $user,
+            ]);
+        } else {
+            $class = $user->classes->first();
+            $class_name = $class->name;
+            $class_group = Classe::where('name', $class_name)->pluck('id')->all();
+            $subjects = Subject::whereIn('classe_id', $class_group)->get();
+            // dd($subjects);
+            return view('home-student', [
+                'class' => $class,
+                'subjects' => $subjects ? $subjects : [],
+                'user' => $user,
+            ]);
+        }
+
     }
 }

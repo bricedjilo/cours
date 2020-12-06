@@ -26,12 +26,19 @@
                                     {{ $subject->description }}
                                 </td>
                             </tr>
+                            <?php $user = $subject->user;?>
+                            <tr>
+                                <td>Professeur: </td>
+                                <td>{{ $user->first_name }} {{ $user->last_name }} </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    <hr>
+    @include('list-of-modules')
 </div>
 
 @endsection

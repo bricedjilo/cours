@@ -22,6 +22,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')
     ->name('home');
 
+// Teacher access only
 Route::get('/subjects/{subject}/show', 'SubjectController@show')
     ->name('show-subject');
 Route::get('/subjects/{subject}/edit', 'SubjectController@edit')
@@ -113,3 +114,7 @@ Route::delete('/homeworks/{homework}/uploaded-files', 'HomeworkController@delete
 Route::delete('/uploaded-files/{upfile}', 'UploadedFileController@destroy')
     ->name('delete-uploaded-file')
     ->middleware('check_teacher');
+
+// Student access only
+Route::get('/modules/{module}/show', 'ModuleController@show')
+    ->name('show-module');

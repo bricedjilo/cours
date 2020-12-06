@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Homework;
 use App\Module;
 use App\Subject;
-use App\Homework;
 use App\UploadedFile as UpFile;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
-use Storage;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Storage;
 
 class ModuleController extends Controller
 {
@@ -42,7 +41,7 @@ class ModuleController extends Controller
         return view(
             'create-module', [
                 'subject' => $subject,
-                'remaining_modules' => array_diff(range(1, 5), $remaining_modules)
+                'remaining_modules' => array_diff(range(1, 5), $remaining_modules),
             ],
         );
     }
@@ -53,7 +52,7 @@ class ModuleController extends Controller
         return view(
             'create-module-homework', [
                 'module' => $module,
-                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks)
+                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks),
             ],
         );
     }
@@ -68,23 +67,22 @@ class ModuleController extends Controller
     {
         $subject = Subject::where('id', $request->input()['subject_id']);
         $files = empty($request->module_files) ? [] : $request->module_files;
-        if($subject->exists()) # && $request->hasFile('module_files')
+        if ($subject->exists()) # && $request->hasFile('module_files')
         {
             $uuids = [];
             try {
-                if (!$this->inputDoesNotExist($request, ['title', 'number']))
-                {
+                if (!$this->inputDoesNotExist($request, ['title', 'number'])) {
                     return redirect()->back()->withErrors(
                         "Veillez entrer toutes les donnees et re-essayez."
-                    ); 
+                    );
                 }
-    
+
                 $i = 0;
                 foreach ($files as $file) {
-                    if(!$file->isValid()) {
+                    if (!$file->isValid()) {
                         return redirect()->back()->withErrors(
                             "L'un de vos fichier n'a pas pu etre ajoute."
-                        ); 
+                        );
                     }
                     $uuids[$i++] = (string) Str::uuid();
                 }
@@ -98,11 +96,11 @@ class ModuleController extends Controller
                 $module_id = (string) Str::uuid();
                 $module = DB::insert(
                     'insert into modules (id, title, number, subject_id) values (?, ?, ?, ?)', [
-                    $module_id,
-                    $request->input()['title'],
-                    $request->input()['number'],
-                    $request->input()['subject_id'],
-                ]);
+                        $module_id,
+                        $request->input()['title'],
+                        $request->input()['number'],
+                        $request->input()['subject_id'],
+                    ]);
 
                 foreach ($files as $file) {
                     $file->storePubliclyAs(
@@ -113,32 +111,32 @@ class ModuleController extends Controller
 
                     DB::insert(
                         'insert into uploaded_files (id, name, extension, user_id, module_id, url) values (?, ?, ?, ?, ?, ?)', [
-                        $uuids[$i],
-                        $file->getClientOriginalName(),
-                        $file->getClientOriginalExtension(),
-                        auth()->user()->id,
-                        $module_id,
-                        "https://csmm-cours.s3.amazonaws.com/module_files/" 
-                        . $uuids[$i++] . "." . $file->getClientOriginalExtension()
-                    ]);
+                            $uuids[$i],
+                            $file->getClientOriginalName(),
+                            $file->getClientOriginalExtension(),
+                            auth()->user()->id,
+                            $module_id,
+                            "https://csmm-cours.s3.amazonaws.com/module_files/"
+                            . $uuids[$i++] . "." . $file->getClientOriginalExtension(),
+                        ]);
                 }
                 DB::commit();
 
                 return redirect()
                     ->back()
                     ->withSuccess('Votre module a ete ajoute.');
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 DB::rollback();
 
                 $i = 0;
-                if($request->hasFile('module_files')) {
+                if ($request->hasFile('module_files')) {
                     foreach ($files as $file) {
                         Storage::disk('s3')->delete(
                             'module_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension()
                         );
                     }
                 }
-                
+
                 return redirect()->back()->withErrors(
                     "Le module n'a pas pu etre cree. Veillez re-essayer."
                 );
@@ -156,9 +154,12 @@ class ModuleController extends Controller
      * @param  \App\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show(Module $subject)
     {
-        //
+        return view('show-module', [
+            'subject' => $subject,
+        ]
+        );
     }
 
     /**
@@ -173,7 +174,7 @@ class ModuleController extends Controller
         return view(
             'edit-module', [
                 'module' => $module,
-                'remaining_modules' => array_diff(range(1, 20), $remaining_modules)
+                'remaining_modules' => array_diff(range(1, 20), $remaining_modules),
             ],
         );
     }
@@ -190,17 +191,16 @@ class ModuleController extends Controller
         $uuids = [];
         $files = empty($request->module_files) ? [] : $request->module_files;
         try {
-            if (!$this->inputDoesNotExist($request, ['title', 'number']))
-            {
+            if (!$this->inputDoesNotExist($request, ['title', 'number'])) {
                 throw new Exception('Veillez entrer toutes les donnees et re-essayez.');
             }
-            
+
             $i = 0;
             foreach ($files as $file) {
-                if(!$file->isValid()) {
+                if (!$file->isValid()) {
                     return redirect()->back()->withErrors(
                         "L'un de vos fichier n'a pas pu etre ajoute."
-                    ); 
+                    );
                 }
                 $uuids[$i++] = (string) Str::uuid();
             }
@@ -210,10 +210,10 @@ class ModuleController extends Controller
             DB::beginTransaction();
 
             Module::where('id', $module->id)
-            ->update([
-                'title' => $request->input()['title'],
-                'number' => $request->input()['number'],
-            ]);
+                ->update([
+                    'title' => $request->input()['title'],
+                    'number' => $request->input()['number'],
+                ]);
 
             foreach ($files as $file) {
                 $file->storePubliclyAs(
@@ -224,14 +224,14 @@ class ModuleController extends Controller
 
                 DB::insert(
                     'insert into uploaded_files (id, name, extension, user_id, module_id, url) values (?, ?, ?, ?, ?, ?)', [
-                    $uuids[$i],
-                    $file->getClientOriginalName(),
-                    $file->getClientOriginalExtension(),
-                    auth()->user()->id,
-                    $module->id,
-                    "https://csmm-cours.s3.amazonaws.com/module_files/" 
-                    . $uuids[$i++] . "." . $file->getClientOriginalExtension()
-                ]);
+                        $uuids[$i],
+                        $file->getClientOriginalName(),
+                        $file->getClientOriginalExtension(),
+                        auth()->user()->id,
+                        $module->id,
+                        "https://csmm-cours.s3.amazonaws.com/module_files/"
+                        . $uuids[$i++] . "." . $file->getClientOriginalExtension(),
+                    ]);
             }
 
             DB::commit();
@@ -240,10 +240,10 @@ class ModuleController extends Controller
                 ->back()
                 ->withSuccess('Votre module a ete mis a jour.');
 
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             $i = 0;
-            if($request->hasFile('module_files')) {
+            if ($request->hasFile('module_files')) {
                 foreach ($files as $file) {
                     Storage::disk('s3')->delete(
                         'module_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension()
@@ -265,8 +265,8 @@ class ModuleController extends Controller
         $subject = $module->subject;
         $up_file_ids = $module->uploadedFiles;
 
-        try{
-            foreach($up_file_ids as $file) {
+        try {
+            foreach ($up_file_ids as $file) {
                 Storage::disk('s3')->delete(
                     'module_files/' . $file->id . '.' . $file->extension
                 );
@@ -277,27 +277,28 @@ class ModuleController extends Controller
 
             return redirect()->route('edit-subject', ['subject' => $subject])
                 ->withSuccess("Excellent!!! Le module a ete supprime.");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
-            foreach($up_file_ids as $file) {
+            foreach ($up_file_ids as $file) {
                 $path = 'module_files/' . $file->id . '.' . $file->extension;
-                if(!Storage::disk('s3')->exists($path)) {
+                if (!Storage::disk('s3')->exists($path)) {
                     Storage::disk('s3')->put('module_files/', $file->id . '.' . $file->extension);
                 }
             }
-            
+
             return redirect()->back()->withErrors([
-                'msg', "Le fichier n'a pas ete supprime. Veillez re-essayer."
+                'msg', "Le fichier n'a pas ete supprime. Veillez re-essayer.",
             ]);
         }
     }
 
-    public function delete_up_file(Request $request, Module $module) {
+    public function delete_up_file(Request $request, Module $module)
+    {
         try {
             DB::beginTransaction();
             UpFile::where([
                 'module_id' => $module->id,
-                'id'        => $request->up_file_id
+                'id' => $request->up_file_id,
             ])->delete();
             DB::commit();
 
@@ -308,15 +309,15 @@ class ModuleController extends Controller
             return redirect()
                 ->back()
                 ->withSuccess('Le fichier a ete supprime.');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             $path = 'module_files/' . $request->up_file_id . '.' . $request->up_file_ext;
-            if(!Storage::disk('s3')->exists($path)) {
+            if (!Storage::disk('s3')->exists($path)) {
                 Storage::disk('s3')->put($path);
             }
-            
+
             return redirect()->back()->withErrors([
-                'msg', "Le fichier n'a pas ete supprime. Veillez re-essayer."
+                'msg', "Le fichier n'a pas ete supprime. Veillez re-essayer.",
             ]);
         }
     }
