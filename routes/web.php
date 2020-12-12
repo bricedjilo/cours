@@ -23,8 +23,6 @@ Route::get('/home', 'HomeController@index')
     ->name('home');
 
 // Teacher access only
-Route::get('/subjects/{subject}/show', 'SubjectController@show')
-    ->name('show-subject');
 Route::get('/subjects/{subject}/edit', 'SubjectController@edit')
     ->name('edit-subject')
     ->middleware('check_teacher');
@@ -116,5 +114,20 @@ Route::delete('/uploaded-files/{upfile}', 'UploadedFileController@destroy')
     ->middleware('check_teacher');
 
 // Student access only
+Route::get('/subjects/{subject}/show', 'SubjectController@show')
+    ->name('show-subject');
+
 Route::get('/modules/{module}/show', 'ModuleController@show')
     ->name('show-module');
+
+Route::get('/chapters/{chapter}/show', 'ChapterController@show')
+    ->name('show-chapter');
+
+Route::get('/lessons/{lesson}/show', 'LessonController@show')
+    ->name('show-lesson');
+
+Route::get('/homeworks/{homework}/show', 'HomeworkController@show')
+    ->name('show-homework');
+    
+Route::get('/homeworks/{homework}/{parent}/show', 'HomeworkController@show')
+    ->name('show-mcl-homework');
