@@ -154,10 +154,10 @@ class ModuleController extends Controller
      * @param  \App\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $subject)
+    public function show(Module $module)
     {
         return view('show-module', [
-            'subject' => $subject,
+            'module' => $module,
         ]
         );
     }
