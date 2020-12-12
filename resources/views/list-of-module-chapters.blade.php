@@ -18,7 +18,7 @@
                         @if (auth()->user()->is_teacher)
                         <a href="/lessons/{{ $lesson->id }}/edit">
                             @else
-                            <a href="/chapters/{{ $chapter->id }}/show">
+                            <a href="/lessons/{{ $lesson->id }}/show">
                                 @endif
                                 Leçon {{ $lesson->number }}: {{ $lesson->title }}
                     </li>

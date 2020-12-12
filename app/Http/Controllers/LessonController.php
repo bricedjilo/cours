@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Lesson;
 use App\Chapter;
 use App\Homework;
+use App\Lesson;
 use App\UploadedFile as UpFile;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
-use Storage;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Storage;
 
 class LessonController extends Controller
 {
@@ -41,7 +40,7 @@ class LessonController extends Controller
         return view(
             'create-lesson', [
                 'chapter' => $chapter,
-                'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons)
+                'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons),
             ],
         );
     }
@@ -52,7 +51,7 @@ class LessonController extends Controller
         return view(
             'create-lesson-homework', [
                 'lesson' => $lesson,
-                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks)
+                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks),
             ],
         );
     }
@@ -66,23 +65,21 @@ class LessonController extends Controller
     public function store(Request $request)
     {
         $chapter = Chapter::where('id', $request->input()['chapter_id']);
-        if($chapter->exists())
-        {
+        if ($chapter->exists()) {
             $uuids = [];
             $files = empty($request->lesson_files) ? [] : $request->lesson_files;
 
             try {
-                if (!$this->inputDoesNotExist($request, ['title', 'number']))
-                {
+                if (!$this->inputDoesNotExist($request, ['title', 'number'])) {
                     throw new Exception('Veillez entrer toutes les donnees et re-essayez.');
                 }
-                
+
                 $i = 0;
                 foreach ($files as $file) {
-                    if(!$file->isValid()) {
+                    if (!$file->isValid()) {
                         return redirect()->back()->withErrors(
                             "L'un de vos fichier n'a pas pu etre ajoute."
-                        ); 
+                        );
                     }
                     $uuids[$i++] = (string) Str::uuid();
                 }
@@ -94,11 +91,11 @@ class LessonController extends Controller
                 $lesson_id = (string) Str::uuid();
                 $lesson = DB::insert(
                     'insert into lessons (id, title, number, chapter_id) values (?, ?, ?, ?)', [
-                    $lesson_id,
-                    $request->input()['title'],
-                    $request->input()['number'],
-                    $request->input()['chapter_id'],
-                ]);
+                        $lesson_id,
+                        $request->input()['title'],
+                        $request->input()['number'],
+                        $request->input()['chapter_id'],
+                    ]);
 
                 foreach ($files as $file) {
                     $file->storePubliclyAs(
@@ -109,32 +106,32 @@ class LessonController extends Controller
 
                     DB::insert(
                         'insert into uploaded_files (id, name, extension, user_id, lesson_id, url) values (?, ?, ?, ?, ?, ?)', [
-                        $uuids[$i],
-                        $file->getClientOriginalName(),
-                        $file->getClientOriginalExtension(),
-                        auth()->user()->id,
-                        $lesson_id,
-                        "https://csmm-cours.s3.amazonaws.com/lesson_files/" 
-                        . $uuids[$i++] . "." . $file->getClientOriginalExtension()
-                    ]);
+                            $uuids[$i],
+                            $file->getClientOriginalName(),
+                            $file->getClientOriginalExtension(),
+                            auth()->user()->id,
+                            $lesson_id,
+                            "https://csmm-cours.s3.amazonaws.com/lesson_files/"
+                            . $uuids[$i++] . "." . $file->getClientOriginalExtension(),
+                        ]);
                 }
                 DB::commit();
 
                 return redirect()
                     ->back()
                     ->withSuccess('Votre lecon a ete ajoute.');
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 DB::rollback();
 
                 $i = 0;
-                if($request->hasFile('lesson_files')) {
+                if ($request->hasFile('lesson_files')) {
                     foreach ($files as $file) {
                         Storage::disk('s3')->delete(
                             'lesson_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension()
                         );
                     }
                 }
-                
+
                 return redirect()->back()->withErrors(
                     "La lecon n'a pas pu etre creee. Veillez re-essayer."
                 );
@@ -142,7 +139,7 @@ class LessonController extends Controller
 
         } else {
             return redirect()->back()->withErrors([
-                'msg', "Il n'y a pas de chapitre pour cette lesson. Veillez le selectionner ou creer"
+                'msg', "Il n'y a pas de chapitre pour cette lesson. Veillez le selectionner ou creer",
             ]);
         }
     }
@@ -155,7 +152,10 @@ class LessonController extends Controller
      */
     public function show(Lesson $lesson)
     {
-        
+        return view('show-lesson', [
+            'lesson' => $lesson,
+        ]
+        );
     }
 
     /**
@@ -167,11 +167,11 @@ class LessonController extends Controller
     public function edit(Lesson $lesson)
     {
         $remaining_lessons = Lesson::where('chapter_id', $lesson->chapter->id)->pluck('number')->all();
-        
+
         return view(
             'edit-lesson', [
                 'lesson' => $lesson,
-                'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons)
+                'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons),
             ],
         );
     }
@@ -188,32 +188,31 @@ class LessonController extends Controller
         $uuids = [];
         $files = empty($request->lesson_files) ? [] : $request->lesson_files;
         try {
-            if (!$this->inputDoesNotExist($request, ['title', 'number']))
-            {
+            if (!$this->inputDoesNotExist($request, ['title', 'number'])) {
                 return redirect()->back()->withErrors(
                     'Veillez entrer toutes les donnees et re-essayez.'
                 );
             }
-            
+
             $i = 0;
             foreach ($files as $file) {
-                if(!$file->isValid()) {
+                if (!$file->isValid()) {
                     return redirect()->back()->withErrors(
                         "L'un de vos fichier n'a pas pu etre ajoute."
-                    ); 
+                    );
                 }
                 $uuids[$i++] = (string) Str::uuid();
             }
-            
+
             $i = 0;
 
             DB::beginTransaction();
 
             Lesson::where('id', $lesson->id)
-            ->update([
-                'title' => $request->input()['title'],
-                'number' => $request->input()['number'],
-            ]);
+                ->update([
+                    'title' => $request->input()['title'],
+                    'number' => $request->input()['number'],
+                ]);
 
             foreach ($files as $file) {
                 $file->storePubliclyAs(
@@ -224,14 +223,14 @@ class LessonController extends Controller
 
                 DB::insert(
                     'insert into uploaded_files (id, name, extension, user_id, lesson_id, url) values (?, ?, ?, ?, ?, ?)', [
-                    $uuids[$i],
-                    $file->getClientOriginalName(),
-                    $file->getClientOriginalExtension(),
-                    auth()->user()->id,
-                    $lesson->id,
-                    "https://csmm-cours.s3.amazonaws.com/lesson_files/" 
-                    . $uuids[$i++] . "." . $file->getClientOriginalExtension()
-                ]);
+                        $uuids[$i],
+                        $file->getClientOriginalName(),
+                        $file->getClientOriginalExtension(),
+                        auth()->user()->id,
+                        $lesson->id,
+                        "https://csmm-cours.s3.amazonaws.com/lesson_files/"
+                        . $uuids[$i++] . "." . $file->getClientOriginalExtension(),
+                    ]);
             }
 
             DB::commit();
@@ -240,10 +239,10 @@ class LessonController extends Controller
                 ->back()
                 ->withSuccess('Votre lecon a ete mise a jour.');
 
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             $i = 0;
-            if($request->hasFile('lesson_files')) {
+            if ($request->hasFile('lesson_files')) {
                 foreach ($files as $file) {
                     Storage::disk('s3')->delete(
                         'lesson_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension()
@@ -265,8 +264,8 @@ class LessonController extends Controller
         $chapter = $lesson->chapter;
         $up_file_ids = $lesson->uploadedFiles;
 
-        try{
-            foreach($up_file_ids as $file) {
+        try {
+            foreach ($up_file_ids as $file) {
                 Storage::disk('s3')->delete(
                     'lesson_files/' . $file->id . '.' . $file->extension
                 );
@@ -277,28 +276,28 @@ class LessonController extends Controller
 
             return redirect()->route('edit-chapter', ['chapter' => $chapter])
                 ->withSuccess("Excellent!!! La leçon a ete supprimee.");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
-            foreach($up_file_ids as $file) {
+            foreach ($up_file_ids as $file) {
                 $path = 'lesson_files/' . $file->id . '.' . $file->extension;
-                if(!Storage::disk('s3')->exists($path)) {
+                if (!Storage::disk('s3')->exists($path)) {
                     Storage::disk('s3')->put($path);
                 }
             }
-            
+
             return redirect()->back()->withErrors(
                 "Le fichier n'a pas ete supprime. Veillez re-essayer."
             );
         }
     }
 
-    public function delete_up_file(Request $request, Lesson $lesson) 
+    public function delete_up_file(Request $request, Lesson $lesson)
     {
         try {
             DB::beginTransaction();
             UpFile::where([
                 'lesson_id' => $lesson->id,
-                'id'        => $request->up_file_id
+                'id' => $request->up_file_id,
             ])->delete();
             DB::commit();
 
@@ -309,13 +308,13 @@ class LessonController extends Controller
             return redirect()
                 ->back()
                 ->withSuccess('Le fichier a ete supprime.');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             $path = 'lesson_files/' . $request->up_file_id . '.' . $request->up_file_ext;
-            if(!Storage::disk('s3')->exists($path)) {
+            if (!Storage::disk('s3')->exists($path)) {
                 Storage::disk('s3')->put($path);
             }
-            
+
             return redirect()->back()->withErrors(
                 "Le fichier n'a pas ete supprime. Veillez re-essayer."
             );

@@ -14,25 +14,32 @@
                 @foreach ($module->chapters->sortBy('number') as $chapter)
                 <ul>
                     <li>
+                        @if (auth()->user()->is_teacher)
                         <a href="/chapters/{{ $chapter->id }}/edit">
-                            Chapter {{ $chapter->number }}: {{ $chapter->title }}
-                        </a>
+                            @else
+                            <a href="/chapters/{{ $chapter->id }}/show">
+                                @endif
+                                Chapter {{ $chapter->number }}: {{ $chapter->title }}
+                            </a>
 
-                        <ul>
+                            <ul>
 
-                            @foreach ($chapter->lessons->sortBy('number') as $lesson)
+                                @foreach ($chapter->lessons->sortBy('number') as $lesson)
 
-                            <li>
+                                <li>
+                                    @if (auth()->user()->is_teacher)
+                                    <a href="/lessons/{{ $lesson->id }}/edit">
+                                        @else
+                                        <a href="/lessons/{{ $lesson->id }}/show">
+                                            @endif
+                                            Leçon {{ $lesson->number }}: {{ $lesson->title }}
+                                        </a>
 
-                                <a href="/lessons/{{ $lesson->id }}/edit">
-                                    Leçon {{ $lesson->number }}: {{ $lesson->title }}
-                                </a>
+                                </li>
 
-                            </li>
+                                @endforeach
 
-                            @endforeach
-
-                        </ul>
+                            </ul>
 
                     </li>
                 </ul>

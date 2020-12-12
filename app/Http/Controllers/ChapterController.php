@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Chapter;
+use App\Homework;
+use App\Module;
+use App\UploadedFile as UpFile;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Exception;
-use App\Module;
-use App\Homework;
-use App\Chapter;
-use App\UploadedFile as UpFile;
-use Illuminate\Http\UploadedFile;
 use Storage;
 
 class ChapterController extends Controller
@@ -41,7 +40,7 @@ class ChapterController extends Controller
         return view(
             'create-chapter', [
                 'module' => $module,
-                'remaining_chapters' => array_diff(range(1, 20), $remaining_chapters)
+                'remaining_chapters' => array_diff(range(1, 20), $remaining_chapters),
             ],
         );
     }
@@ -52,7 +51,7 @@ class ChapterController extends Controller
         return view(
             'create-chapter-homework', [
                 'chapter' => $chapter,
-                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks)
+                'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks),
             ],
         );
     }
@@ -66,22 +65,20 @@ class ChapterController extends Controller
     public function store(Request $request)
     {
         $module = Module::where('id', $request->input()['module_id']);
-        if($module->exists())
-        {
+        if ($module->exists()) {
             try {
                 $files = empty($request->chapter_files) ? [] : $request->chapter_files;
 
-                if (!$this->inputDoesNotExist($request, ['title', 'number', 'description']))
-                {
+                if (!$this->inputDoesNotExist($request, ['title', 'number', 'description'])) {
                     throw new Exception('Veillez entrer toutes les donnees et re-essayez.');
                 }
                 $uuids = [];
                 $i = 0;
                 foreach ($files as $file) {
-                    if(!$file->isValid()) {
+                    if (!$file->isValid()) {
                         return redirect()->back()->withErrors(
                             "L'un de vos fichier n'a pas pu etre ajoute."
-                        ); 
+                        );
                     }
                     $uuids[$i++] = (string) Str::uuid();
                 }
@@ -94,11 +91,11 @@ class ChapterController extends Controller
 
                 $chapter = DB::table('chapters')->insert([
                     [
-                        'id'        => $chapter_id,
-                        'title'     => $request->input()['title'],
-                        'number'    => $request->input()['number'],
-                        'description'   => $request->input()['description'],
-                        'module_id'    => $request->input()['module_id'],
+                        'id' => $chapter_id,
+                        'title' => $request->input()['title'],
+                        'number' => $request->input()['number'],
+                        'description' => $request->input()['description'],
+                        'module_id' => $request->input()['module_id'],
                     ],
                 ]);
 
@@ -111,14 +108,14 @@ class ChapterController extends Controller
 
                     DB::insert(
                         'insert into uploaded_files (id, name, extension, user_id, chapter_id, url) values (?, ?, ?, ?, ?, ?)', [
-                        $uuids[$i],
-                        $file->getClientOriginalName(),
-                        $file->getClientOriginalExtension(),
-                        auth()->user()->id,
-                        $chapter_id,
-                        "https://csmm-cours.s3.amazonaws.com/chapter_files/" 
-                        . $uuids[$i++] . "." . $file->getClientOriginalExtension()
-                    ]);
+                            $uuids[$i],
+                            $file->getClientOriginalName(),
+                            $file->getClientOriginalExtension(),
+                            auth()->user()->id,
+                            $chapter_id,
+                            "https://csmm-cours.s3.amazonaws.com/chapter_files/"
+                            . $uuids[$i++] . "." . $file->getClientOriginalExtension(),
+                        ]);
                 }
                 DB::commit();
 
@@ -128,7 +125,7 @@ class ChapterController extends Controller
 
                 // return redirect()->route('edit-subject', ['subject' => $module->get()->first()->subject]);
 
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 return redirect()->back()->withErrors(
                     "Le chapitre n'a pas ete cree. " . $e->getMessage()
                 );
@@ -146,9 +143,12 @@ class ChapterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Chapter $chapter)
     {
-        //
+        return view('show-chapter', [
+            'chapter' => $chapter,
+        ]
+        );
     }
 
     /**
@@ -163,7 +163,7 @@ class ChapterController extends Controller
         return view(
             'edit-chapter', [
                 'chapter' => $chapter,
-                'remaining_chapters' => array_diff(range(1, 20), $remaining_chapters)
+                'remaining_chapters' => array_diff(range(1, 20), $remaining_chapters),
             ],
         );
     }
@@ -180,31 +180,30 @@ class ChapterController extends Controller
         $uuids = [];
         $files = empty($request->chapter_files) ? [] : $request->chapter_files;
         try {
-            if (!$this->inputDoesNotExist($request, ['title', 'number']))
-            {
+            if (!$this->inputDoesNotExist($request, ['title', 'number'])) {
                 throw new Exception('Veillez entrer toutes les donnees et re-essayez.');
             }
 
             $i = 0;
-            
+
             foreach ($files as $file) {
-                if(!$file->isValid()) {
+                if (!$file->isValid()) {
                     return redirect()->back()->withErrors(
                         "L'un de vos fichier n'a pas pu etre ajoute."
-                    ); 
+                    );
                 }
                 $uuids[$i++] = (string) Str::uuid();
             }
-            
+
             $i = 0;
 
             DB::beginTransaction();
 
             Chapter::where('id', $chapter->id)
-            ->update([
-                'title' => $request->title,
-                'number' => $request->number,
-            ]);
+                ->update([
+                    'title' => $request->title,
+                    'number' => $request->number,
+                ]);
 
             foreach ($files as $file) {
                 $file->storePubliclyAs(
@@ -215,14 +214,14 @@ class ChapterController extends Controller
 
                 DB::insert(
                     'insert into uploaded_files (id, name, extension, user_id, chapter_id, url) values (?, ?, ?, ?, ?, ?)', [
-                    $uuids[$i],
-                    $file->getClientOriginalName(),
-                    $file->getClientOriginalExtension(),
-                    auth()->user()->id,
-                    $chapter->id,
-                    "https://csmm-cours.s3.amazonaws.com/chapter_files/" 
-                    . $uuids[$i++] . "." . $file->getClientOriginalExtension()
-                ]);
+                        $uuids[$i],
+                        $file->getClientOriginalName(),
+                        $file->getClientOriginalExtension(),
+                        auth()->user()->id,
+                        $chapter->id,
+                        "https://csmm-cours.s3.amazonaws.com/chapter_files/"
+                        . $uuids[$i++] . "." . $file->getClientOriginalExtension(),
+                    ]);
             }
 
             DB::commit();
@@ -231,10 +230,10 @@ class ChapterController extends Controller
                 ->back()
                 ->withSuccess('Votre chapitre a ete mis a jour.');
 
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             $i = 0;
-            if($request->hasFile('chapter_files')) {
+            if ($request->hasFile('chapter_files')) {
                 foreach ($files as $file) {
                     Storage::disk('s3')->delete(
                         'chapter_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension()
@@ -256,8 +255,8 @@ class ChapterController extends Controller
         $module = $chapter->module;
         $up_file_ids = $chapter->uploadedFiles;
 
-        try{
-            foreach($up_file_ids as $file) {
+        try {
+            foreach ($up_file_ids as $file) {
                 Storage::disk('s3')->delete(
                     'chapter_files/' . $file->id . '.' . $file->extension
                 );
@@ -268,27 +267,28 @@ class ChapterController extends Controller
 
             return redirect()->route('edit-module', ['module' => $module])
                 ->withSuccess("Excellent!!! Le chapitre a ete supprime.");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
-            foreach($up_file_ids as $file) {
+            foreach ($up_file_ids as $file) {
                 $path = 'chapter_files/' . $file->id . '.' . $file->extension;
-                if(!Storage::disk('s3')->exists($path)) {
+                if (!Storage::disk('s3')->exists($path)) {
                     Storage::disk('s3')->put($path);
                 }
             }
-            
+
             return redirect()->back()->withErrors(
                 "Le fichier n'a pas ete supprime. Veillez re-essayer."
             );
         }
     }
 
-    public function delete_up_file(Request $request, Chapter $chapter) {
+    public function delete_up_file(Request $request, Chapter $chapter)
+    {
         try {
             DB::beginTransaction();
             UpFile::where([
                 'chapter_id' => $chapter->id,
-                'id'        => $request->up_file_id
+                'id' => $request->up_file_id,
             ])->delete();
             DB::commit();
 
@@ -299,13 +299,13 @@ class ChapterController extends Controller
             return redirect()
                 ->back()
                 ->withSuccess('Le fichier a ete supprime.');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             $path = 'chapter_files/' . $request->up_file_id . '.' . $request->up_file_ext;
-            if(!Storage::disk('s3')->exists($path)) {
+            if (!Storage::disk('s3')->exists($path)) {
                 Storage::disk('s3')->put($path);
             }
-            
+
             return redirect()->back()->withErrors(
                 "Le fichier n'a pas ete supprime. Veillez re-essayer."
             );
