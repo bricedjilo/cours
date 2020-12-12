@@ -1,15 +1,19 @@
 <div>
     <h3>Liste des leçons</h3>
     <ul class="list-of-chapter-lessons">
-        
+
         @foreach ($chapter->lessons->sortBy('number') as $lesson)
-            
-            <li>
-                <a href="/lessons/{{ $lesson->id }}/edit">
-                    Lesson {{ $lesson->number }}: {{ $lesson->title }}
+
+        <li>
+            @if (auth()->user()->is_teacher)
+            <a href="/lessons/{{ $lesson->id }}/edit">
+                @else
+                <a href="/chapters/{{ $chapter->id }}/show">
+                    @endif
+                    Leçon {{ $lesson->number }}: {{ $lesson->title }}
                 </a>
-            </li>
-            
+        </li>
+
         @endforeach
     </ul>
 </div>
