@@ -32,17 +32,25 @@
                                     {{ $homework->number }}
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Contenu: </td>
-                                <td>
-                                    {{ $homework->number }}
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+    </div>
+    <hr>
+    <h4>Contenu</h4>
+    <div>{{ $homework->content }}</div>
+    <hr>
+    <h4>Documents</h4>
+    <div>
+        @foreach($homework->uploadedFiles as $file)
+        <ul>
+            <li>
+                <a href="{{ $file->url }}" target="_blank">{{ $file->name }}</a>
+            </li>
+        </ul>
+        @endforeach
     </div>
 </div>
 @endsection
