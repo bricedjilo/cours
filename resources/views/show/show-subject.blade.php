@@ -11,10 +11,10 @@
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10 col-sm-12 col-xs-12">
             <div class="card">
-                <h5 class="card-header">
-                    Module <b>{{ $module->number }}:
-                        {{ $module->title }}</b>
-                </h5>
+                <span class="card-header">
+                    Matiere:
+                    <b>{{ $subject->name }} - {{ $subject->classe->name }}</b>
+                </span>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -26,16 +26,15 @@
                     <table class="table table-hover">
                         <tbody>
                             <tr>
-                                <td>Title: </td>
+                                <td>Description: </td>
                                 <td>
-                                    {{ $module->title }}
+                                    {{ $subject->description }}
                                 </td>
                             </tr>
+                            <?php $user = $subject->user;?>
                             <tr>
-                                <td>Number: </td>
-                                <td>
-                                    {{ $module->number }}
-                                </td>
+                                <td>Professeur: </td>
+                                <td>{{ $user->first_name }} {{ $user->last_name }} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -44,8 +43,7 @@
         </div>
     </div>
     <hr>
-    @include('list-of-module-chapters')
-    <hr>
-    @include('list-of-module-homeworks')
+    @include('lists.list-of-modules')
 </div>
+
 @endsection

@@ -49,7 +49,7 @@ class LessonController extends Controller
     {
         $remaining_homeworks = Homework::where('lesson_id', $lesson->id)->pluck('number')->all();
         return view(
-            'create-lesson-homework', [
+            'create.create-lesson-homework', [
                 'lesson' => $lesson,
                 'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks),
             ],
@@ -152,7 +152,7 @@ class LessonController extends Controller
      */
     public function show(Lesson $lesson)
     {
-        return view('show-lesson', [
+        return view('show.show-lesson', [
             'lesson' => $lesson,
         ]
         );
@@ -169,7 +169,7 @@ class LessonController extends Controller
         $remaining_lessons = Lesson::where('chapter_id', $lesson->chapter->id)->pluck('number')->all();
 
         return view(
-            'edit-lesson', [
+            'edit.edit-lesson', [
                 'lesson' => $lesson,
                 'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons),
             ],

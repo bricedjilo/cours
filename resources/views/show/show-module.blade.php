@@ -12,8 +12,8 @@
         <div class="col-lg-6 col-md-10 col-sm-12 col-xs-12">
             <div class="card">
                 <h5 class="card-header">
-                    Chapter <b>{{ $chapter->number }}:
-                        {{ $chapter->title }}</b>
+                    Module <b>{{ $module->number }}:
+                        {{ $module->title }}</b>
                 </h5>
 
                 <div class="card-body">
@@ -28,19 +28,13 @@
                             <tr>
                                 <td>Title: </td>
                                 <td>
-                                    {{ $chapter->title }}
+                                    {{ $module->title }}
                                 </td>
                             </tr>
                             <tr>
                                 <td>Number: </td>
                                 <td>
-                                    {{ $chapter->number }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Description: </td>
-                                <td>
-                                    {{ $chapter->description }}
+                                    {{ $module->number }}
                                 </td>
                             </tr>
                         </tbody>
@@ -50,8 +44,8 @@
         </div>
     </div>
     <hr>
-    @include('list-of-chapter-lessons')
+    @include('lists.list-of-module-chapters')
     <hr>
-    @include('list-of-chapter-homeworks')
+    @include('lists.list-of-module-homeworks')
 </div>
 @endsection

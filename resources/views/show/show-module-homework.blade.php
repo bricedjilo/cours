@@ -2,6 +2,6 @@
 
 @section('content')
 
-@include('show-homework')
+@include('show.show-homework')
 
 @endsection

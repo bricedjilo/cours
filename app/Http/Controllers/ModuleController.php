@@ -39,7 +39,7 @@ class ModuleController extends Controller
     {
         $remaining_modules = Module::pluck('number')->all();
         return view(
-            'create-module', [
+            'create.create-module', [
                 'subject' => $subject,
                 'remaining_modules' => array_diff(range(1, 5), $remaining_modules),
             ],
@@ -50,7 +50,7 @@ class ModuleController extends Controller
     {
         $remaining_homeworks = Homework::where('module_id', $module->id)->pluck('number')->all();
         return view(
-            'create-module-homework', [
+            'create.create-module-homework', [
                 'module' => $module,
                 'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks),
             ],
@@ -156,7 +156,7 @@ class ModuleController extends Controller
      */
     public function show(Module $module)
     {
-        return view('show-module', [
+        return view('show.show-module', [
             'module' => $module,
         ]
         );
@@ -172,7 +172,7 @@ class ModuleController extends Controller
     {
         $remaining_modules = Module::where("subject_id", $module->subject->id)->pluck('number')->all();
         return view(
-            'edit-module', [
+            'edit.edit-module', [
                 'module' => $module,
                 'remaining_modules' => array_diff(range(1, 20), $remaining_modules),
             ],
@@ -275,7 +275,7 @@ class ModuleController extends Controller
             Module::destroy($module->id);
             DB::commit();
 
-            return redirect()->route('edit-subject', ['subject' => $subject])
+            return redirect()->route('edit.edit-subject', ['subject' => $subject])
                 ->withSuccess("Excellent!!! Le module a ete supprime.");
         } catch (Exception $e) {
             DB::rollback();
