@@ -1,7 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10 col-sm-12 col-xs-12">
@@ -12,8 +8,8 @@
         <div class="col-lg-6 col-md-10 col-sm-12 col-xs-12">
             <div class="card">
                 <h5 class="card-header">
-                    Chapter <b>{{ $chapter->number }}:
-                        {{ $chapter->title }}</b>
+                    Homework <b>{{ $homework->number }}:
+                        {{ $homework->title }}</b>
                 </h5>
 
                 <div class="card-body">
@@ -28,19 +24,13 @@
                             <tr>
                                 <td>Title: </td>
                                 <td>
-                                    {{ $chapter->title }}
+                                    {{ $homework->title }}
                                 </td>
                             </tr>
                             <tr>
                                 <td>Number: </td>
                                 <td>
-                                    {{ $chapter->number }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Description: </td>
-                                <td>
-                                    {{ $chapter->description }}
+                                    {{ $homework->number }}
                                 </td>
                             </tr>
                         </tbody>
@@ -50,8 +40,17 @@
         </div>
     </div>
     <hr>
-    @include('list-of-chapter-lessons')
+    <h4>Contenu</h4>
+    <div>{{ $homework->content }}</div>
     <hr>
-    @include('list-of-chapter-homeworks')
+    <h4>Documents</h4>
+    <div>
+        @foreach($homework->uploadedFiles as $file)
+        <ul>
+            <li>
+                <a href="{{ $file->url }}" target="_blank">{{ $file->name }}</a>
+            </li>
+        </ul>
+        @endforeach
+    </div>
 </div>
-@endsection
