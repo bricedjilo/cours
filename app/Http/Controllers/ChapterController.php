@@ -38,7 +38,7 @@ class ChapterController extends Controller
     {
         $remaining_chapters = Chapter::where('module_id', $module->id)->pluck('number')->all();
         return view(
-            'create-chapter', [
+            'create.create-chapter', [
                 'module' => $module,
                 'remaining_chapters' => array_diff(range(1, 20), $remaining_chapters),
             ],
@@ -49,7 +49,7 @@ class ChapterController extends Controller
     {
         $remaining_homeworks = Homework::where('chapter_id', $chapter->id)->pluck('number')->all();
         return view(
-            'create-chapter-homework', [
+            'create.create-chapter-homework', [
                 'chapter' => $chapter,
                 'remaining_homeworks' => array_diff(range(1, 20), $remaining_homeworks),
             ],
@@ -145,7 +145,7 @@ class ChapterController extends Controller
      */
     public function show(Chapter $chapter)
     {
-        return view('show-chapter', [
+        return view('show.show-chapter', [
             'chapter' => $chapter,
         ]
         );
@@ -161,7 +161,7 @@ class ChapterController extends Controller
     {
         $remaining_chapters = Chapter::where('module_id', $chapter->module->id)->pluck('number')->all();
         return view(
-            'edit-chapter', [
+            'edit.edit-chapter', [
                 'chapter' => $chapter,
                 'remaining_chapters' => array_diff(range(1, 20), $remaining_chapters),
             ],
@@ -265,7 +265,7 @@ class ChapterController extends Controller
             Chapter::destroy($chapter->id);
             DB::commit();
 
-            return redirect()->route('edit-module', ['module' => $module])
+            return redirect()->route('edit.edit-module', ['module' => $module])
                 ->withSuccess("Excellent!!! Le chapitre a ete supprime.");
         } catch (Exception $e) {
             DB::rollback();

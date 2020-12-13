@@ -164,12 +164,12 @@ class HomeworkController extends Controller
      */
     public function show(Homework $homework, $parent)
     {
-        $view = "show-module-homework";
+        $view = "show.show-module-homework";
         if ($parent == "chapter") {
-            $view = "show-chapter-homework";
+            $view = "show.show-chapter-homework";
             // $parent_id = $parent . "_id";
         } elseif ($parent == 'lesson') {
-            $view = "show-lesson-homework";
+            $view = "show.show-lesson-homework";
         }
         return view(
             $view, [
@@ -186,12 +186,12 @@ class HomeworkController extends Controller
      */
     public function edit(Homework $homework, $parent)
     {
-        $view = "edit-module-homework";
+        $view = "edit.edit-module-homework";
         if ($parent == "chapter") {
-            $view = "edit-chapter-homework";
+            $view = "edit.edit-chapter-homework";
             $parent_id = $parent . "_id";
         } elseif ($parent == 'lesson') {
-            $view = "edit-lesson-homework";
+            $view = "edit.edit-lesson-homework";
         }
         $remaining_homeworks = Homework::where($parent . "_id", $homework->$parent->id)->pluck('number')->all();
         return view(
@@ -306,15 +306,15 @@ class HomeworkController extends Controller
         if ($homework->lesson_id) {
             $folder = "lesson_hw_files/";
             $mod_chap_lesson = ['lesson' => $homework->lesson];
-            $view = "edit-lesson";
+            $view = "edit.edit-lesson";
         } else if ($homework->chapter_id) {
             $folder = "chapter_hw_files/";
             $mod_chap_lesson = ['chapter' => $homework->chapter];
-            $view = "edit-chapter";
+            $view = "edit.edit-chapter";
         } else {
             $folder = "module_hw_files/";
             $mod_chap_lesson = ['module' => $homework->module];
-            $view = "edit-module";
+            $view = "edit.edit-module";
         }
 
         try {

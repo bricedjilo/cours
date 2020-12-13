@@ -54,7 +54,7 @@ class SubjectController extends Controller
     public function show(Subject $subject)
     {
         // dd($subject->modules);
-        return view('show-subject', [
+        return view('show.show-subject', [
             'subject' => $subject,
             'user' => Auth::user(),
         ]
@@ -70,7 +70,7 @@ class SubjectController extends Controller
     public function edit(Subject $subject)
     {
         $remaining_modules = Module::where('subject_id', $subject->id)->pluck('number')->all();
-        return view('edit-subject', [
+        return view('edit.edit-subject', [
             'subject' => $subject,
             'remaining_modules' => array_diff(range(1, 10), $remaining_modules),
         ]);
