@@ -128,6 +128,6 @@ Route::get('/lessons/{lesson}/show', 'LessonController@show')
 
 Route::get('/homeworks/{homework}/show', 'HomeworkController@show')
     ->name('show-homework');
-    
+
 Route::get('/homeworks/{homework}/{parent}/show', 'HomeworkController@show')
     ->name('show-mcl-homework');
