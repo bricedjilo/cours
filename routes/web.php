@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Auth Routes
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')
@@ -131,3 +132,36 @@ Route::get('/homeworks/{homework}/show', 'HomeworkController@show')
 
 Route::get('/homeworks/{homework}/{parent}/show', 'HomeworkController@show')
     ->name('show-mcl-homework');
+
+// Admin access only
+Route::get('/admin', 'AdminController@index')
+    ->name('admin-home')
+    ->middleware('check_admin');
+
+Route::get('/admin/student/create', 'AdminController@create')
+    ->name('admin-create-student')
+    ->middleware('check_admin');
+
+Route::get('/admin/professor/create', 'AdminController@create')
+    ->name('admin-create-professor')
+    ->middleware('check_admin');
+
+Route::get('/admin/staff/create', 'AdminController@create')
+    ->name('admin-create-staff')
+    ->middleware('check_admin');
+
+Route::get('/admin/accounts/search', 'AdminController@search')
+    ->name('admin-search')
+    ->middleware('check_admin');
+
+Route::post('/admin/accounts/find', 'AdminController@find')
+    ->name('admin-find-account')
+    ->middleware('check_admin');
+
+// Route::post('/users/{token}/show', 'UserController@show')
+//     ->name('admin-show-account')
+//     ->middleware('check_admin');
+
+Route::post('/admin/register/accounts', 'AdminController@store')
+    ->name('register')
+    ->middleware('check_admin');

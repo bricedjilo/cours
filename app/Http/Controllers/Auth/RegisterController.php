@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -20,7 +21,7 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
-    */
+     */
 
     use RegistersUsers;
 
@@ -38,7 +39,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('check_admin');
     }
 
     /**
@@ -47,12 +48,14 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    public function validator(array $data)
     {
+        // dd($data);
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'status' => ['required', 'string', Rule::in(['student', 'professor'])],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -63,19 +66,26 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
+    public function store(array $data)
     {
-        $student = false;
-        if(!empty($data['status']) && $data['status'] == 'student') {
-            $student = true;
+        $is_student = false;
+        $is_admin = false;
+        if (!empty($data['status']) && $data['status'] == 'student') {
+            $is_student = true;
         }
+        if (!empty($data['is_admin']) && $data['is_admin'] == 'on') {
+            $is_admin = true;
+        }
+
         return User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'is_student' => $student,
-            'is_teacher' => !$student
+            'is_student' => $is_student,
+            'is_teacher' => !$is_student,
+            'is_admin' => $is_admin,
+            'is_active' => true,
         ]);
     }
 }

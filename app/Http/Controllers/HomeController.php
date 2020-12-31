@@ -26,7 +26,9 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
+        // dd($user);
         if ($user->is_teacher) {
+            // dd($user);
             $classes = $user->classes;
             return view('home-teacher', [
                 'classe' => $classes ? $classes : [],
@@ -37,7 +39,6 @@ class HomeController extends Controller
             $class_name = $class->name;
             $class_group = Classe::where('name', $class_name)->pluck('id')->all();
             $subjects = Subject::whereIn('classe_id', $class_group)->get();
-            // dd($subjects);
             return view('home-student', [
                 'class' => $class,
                 'subjects' => $subjects ? $subjects : [],

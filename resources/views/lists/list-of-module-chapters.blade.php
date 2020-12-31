@@ -21,6 +21,7 @@
                             <a href="/lessons/{{ $lesson->id }}/show">
                                 @endif
                                 Leçon {{ $lesson->number }}: {{ $lesson->title }}
+                            </a>
                     </li>
                     @endforeach
                 </ul>

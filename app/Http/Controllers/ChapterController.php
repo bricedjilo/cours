@@ -261,25 +261,29 @@ class ChapterController extends Controller
                     'chapter_files/' . $file->id . '.' . $file->extension
                 );
             }
-            DB::beginTransaction();
-            Chapter::destroy($chapter->id);
-            DB::commit();
-
-            return redirect()->route('edit.edit-module', ['module' => $module])
-                ->withSuccess("Excellent!!! Le chapitre a ete supprime.");
         } catch (Exception $e) {
-            DB::rollback();
             foreach ($up_file_ids as $file) {
                 $path = 'chapter_files/' . $file->id . '.' . $file->extension;
                 if (!Storage::disk('s3')->exists($path)) {
                     Storage::disk('s3')->put($path);
                 }
             }
-
             return redirect()->back()->withErrors(
                 "Le fichier n'a pas ete supprime. Veillez re-essayer."
             );
         }
+        try {
+            DB::beginTransaction();
+            Chapter::destroy($chapter->id);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(
+                "Le fichier n'a pas ete supprime. Veillez re-essayer."
+            );
+        }
+        return redirect()->route('edit-module', ['module' => $module])
+            ->withSuccess("Excellent!!! Le chapitre a ete supprime.");
     }
 
     public function delete_up_file(Request $request, Chapter $chapter)

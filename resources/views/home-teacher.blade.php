@@ -27,9 +27,10 @@
                                     <div>{{ __('Eleve') }}</div>
                                     @else
                                     <div>{{ __('Professeur') }}</div>
+                                    @endif
                                     @if ($user->is_admin)
                                     <div>{{ __('Administrateur') }}</div>
-                                    @endif
+                                    <div><a href="{{ route('admin-home') }}">{{__('Page administrateur')}}</a></div>
                                     @endif
                                 </td>
                             </tr>
