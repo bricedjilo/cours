@@ -1,17 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
     <div class="row mb-4">
         <div class="col-md-10">
             <a href="{{ Route('admin-home') }}">Admin home</a>
         </div>
     </div>
+    <hr>
     @include('error-success-message')
     @include('admin.partials.search')
 
-    @if (!empty($users) && count($users) > 0)
     <hr>
+    @if (!empty($users) && count($users) > 0)
     <h2>Resultats</h2>
 
     <div class="form-group">
@@ -40,7 +42,7 @@
             </ul>
         </div>
     </div>
+
     @endif
 </div>
-
 @endsection

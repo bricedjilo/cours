@@ -85,15 +85,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        User::where('id', $user->id)->delete();
     }
 
-    public function find(String $first_name, String $last_name)
+    public function find($first_name, $last_name)
     {
-        return User::where('first_name', 'ilike', "%{strtolower($first_name)}%")
-            ->or('last_name', 'ilike', "%{strtolower($last_name)}%")
-            ->get();
+        if (!empty($first_name) && !empty($last_name)) {
+            return User::where('first_name', "like", "%$first_name%")
+                ->where('last_name', 'like', "%$last_name%")
+                ->get();
+        } elseif (empty($first_name) && !empty($last_name)) {
+            return User::where('last_name', 'like', "%$last_name%")
+                ->get();
+        } elseif (!empty($first_name) && empty($last_name)) {
+            return User::where('first_name', "like", "%$first_name%")
+                ->get();
+        } else {
+            return User::all();
+        }
     }
 }

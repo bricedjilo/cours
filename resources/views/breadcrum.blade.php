@@ -1,5 +1,5 @@
 <div class="mt-2 mb-4">
-    <a href="/home">{{ auth()->user()->classes()->first()->name }}</a>
+    <a href="/home">{{ $subject->classe->name }}</a>
 
     @if(!empty($subject))
     <span class="font-weight-bold">

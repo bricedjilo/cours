@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Auth\RegisterController as RegisterController;
 use App\Http\Controllers\UserController as UserController;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -81,9 +82,9 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return view('admin.edit-account', ['user' => $user]);
     }
 
     /**
@@ -93,9 +94,26 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        try {
+            $params = $request->request->all();
+            if ($this->validator($params)->fails()) {
+                return redirect()->back()->withErrors($this->validator($params));
+            }
+            if ($this->email_validator($params)->fails()) {
+                return redirect()->back()->withErrors($this->email_validator($params));
+            }
+            User::where('id', $user->id)
+                ->update([
+                    'first_name' => $params['first_name'],
+                    'last_name' => $params['last_name'],
+                    'email' => $params['email'],
+                ]);
+            return redirect()->back()->withSuccess("Ce compte a ete modifie.");
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors("Ce compte n'a pas ete modifie." . $e->getMessage());
+        }
     }
 
     /**
@@ -104,9 +122,14 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        try {
+            (new UserController())->destroy($user);
+            return redirect()->route("admin-search")->withSuccess("Le compte a ete supprime.");
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors("Ce compte n'a pas ete supprime.");
+        }
     }
 
     public function search()
@@ -117,8 +140,15 @@ class AdminController extends Controller
     public function validator(array $data)
     {
         return Validator::make($data, [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'first_name' => 'string|nullable|max:255',
+            'last_name' => 'string|nullable|max:255',
+        ]);
+    }
+
+    public function email_validator(array $data)
+    {
+        return Validator::make($data, [
+            'email' => ['required', 'string', 'email', 'max:255'],
         ]);
     }
 
@@ -129,12 +159,12 @@ class AdminController extends Controller
             if ($this->validator($params)->fails()) {
                 return redirect()->back()->withErrors($this->validator($params));
             }
-            $user = (new UserController())->find($params['first_name'], $params['last_name']);
-            return view('admin.result-account-search');
+            $users = (new UserController())->find($params['first_name'], $params['last_name']);
+            redirect()->back();
+            return view('admin.show-results', ['users' => $users]);
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(
-                "Ce compte n'existe pas."
-            );
+            return redirect()->back()->withErrors("Ce compte n'existe pas ou alors une erreur s'est produite.");
+            // return redirect()->back()->withErrors($e->getMessage());
         }
     }
 }

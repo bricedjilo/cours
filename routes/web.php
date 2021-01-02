@@ -158,9 +158,17 @@ Route::post('/admin/accounts/find', 'AdminController@find')
     ->name('admin-find-account')
     ->middleware('check_admin');
 
-// Route::post('/users/{token}/show', 'UserController@show')
-//     ->name('admin-show-account')
-//     ->middleware('check_admin');
+Route::get('/admin/accounts/{user}/edit', 'AdminController@edit')
+    ->name('admin-edit-account')
+    ->middleware('check_admin');
+
+Route::put('/admin/accounts/{user}', 'AdminController@update')
+    ->name('admin-update-account')
+    ->middleware('check_admin');
+
+Route::delete('/admin/accounts/{user}', 'AdminController@destroy')
+    ->name('admin-delete-account')
+    ->middleware('check_admin');
 
 Route::post('/admin/register/accounts', 'AdminController@store')
     ->name('register')
