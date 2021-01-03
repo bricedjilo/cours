@@ -28,7 +28,7 @@
                         <div class="form-group">
                             <textarea class="form-control" name="content" rows="6" id="homework-content"
                                 placeholder="Contenu du devoir">
-                    </textarea>
+                            </textarea>
                         </div>
                         <div class="form-group">
                             <select class="form-control" id="module-number" name="number">

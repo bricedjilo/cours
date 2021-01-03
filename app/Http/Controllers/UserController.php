@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Module;
-use App\Subject;
+use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class SubjectController extends Controller
+class UserController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('check_admin');
     }
 
     /**
@@ -48,16 +47,13 @@ class SubjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Subject  $subject
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Subject $subject)
+    public function show(String $token)
     {
-        return view('show.show-subject', [
-            'subject' => $subject,
-            'user' => Auth::user(),
-        ]
-        );
+        //
+
     }
 
     /**
@@ -66,13 +62,9 @@ class SubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Subject $subject)
+    public function edit($id)
     {
-        $remaining_modules = Module::where('subject_id', $subject->id)->pluck('number')->all();
-        return view('edit.edit-subject', [
-            'subject' => $subject,
-            'remaining_modules' => array_diff(range(1, 10), $remaining_modules),
-        ]);
+        //
     }
 
     /**
@@ -93,8 +85,25 @@ class SubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        User::where('id', $user->id)->delete();
+    }
+
+    public function find($first_name, $last_name)
+    {
+        if (!empty($first_name) && !empty($last_name)) {
+            return User::where('first_name', "like", "%$first_name%")
+                ->where('last_name', 'like', "%$last_name%")
+                ->get();
+        } elseif (empty($first_name) && !empty($last_name)) {
+            return User::where('last_name', 'like', "%$last_name%")
+                ->get();
+        } elseif (!empty($first_name) && empty($last_name)) {
+            return User::where('first_name', "like", "%$first_name%")
+                ->get();
+        } else {
+            return User::all();
+        }
     }
 }

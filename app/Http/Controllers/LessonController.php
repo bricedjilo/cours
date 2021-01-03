@@ -38,7 +38,7 @@ class LessonController extends Controller
     {
         $remaining_lessons = Lesson::where('chapter_id', $chapter->id)->pluck('number')->all();
         return view(
-            'create-lesson', [
+            'create.create-lesson', [
                 'chapter' => $chapter,
                 'remaining_lessons' => array_diff(range(1, 30), $remaining_lessons),
             ],
@@ -70,7 +70,9 @@ class LessonController extends Controller
             $files = empty($request->lesson_files) ? [] : $request->lesson_files;
 
             try {
-                if (!$this->inputDoesNotExist($request, ['title', 'number'])) {
+                // dd(ctype_digit(strval($request->input()['number'])));
+                if (!$this->inputDoesNotExist($request, ['title', 'number']) ||
+                    !ctype_digit($request->input()['number'])) {
                     throw new Exception('Veillez entrer toutes les donnees et re-essayez.');
                 }
 
@@ -124,16 +126,17 @@ class LessonController extends Controller
                 DB::rollback();
 
                 $i = 0;
-                if ($request->hasFile('lesson_files')) {
+                if ($request->hasFile('lesson_files') && !empty($uuids)) {
+                    $to_be_deleted = 'lesson_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension();
                     foreach ($files as $file) {
-                        Storage::disk('s3')->delete(
-                            'lesson_files/' . $uuids[$i++] . '.' . $file->getClientOriginalExtension()
-                        );
+                        // if (Storage::disk('s3')->exists($to_be_deleted)) {
+                        Storage::disk('s3')->delete($to_be_deleted);
+                        // }
                     }
                 }
 
                 return redirect()->back()->withErrors(
-                    "La lecon n'a pas pu etre creee. Veillez re-essayer."
+                    nl2br($e->getMessage() . " La lecon n'a pas pu etre creee. Veillez re-essayer.")
                 );
             }
 
@@ -188,7 +191,7 @@ class LessonController extends Controller
         $uuids = [];
         $files = empty($request->lesson_files) ? [] : $request->lesson_files;
         try {
-            if (!$this->inputDoesNotExist($request, ['title', 'number'])) {
+            if (!$this->inputDoesNotExist($request, ['title', 'number']) || $request->input()['number'] == 0) {
                 return redirect()->back()->withErrors(
                     'Veillez entrer toutes les donnees et re-essayez.'
                 );

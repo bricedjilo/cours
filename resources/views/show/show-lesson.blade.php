@@ -50,6 +50,17 @@
         </div>
     </div>
     <hr>
+    <h4>Documents</h4>
+    <div>
+        @foreach($lesson->uploadedFiles as $file)
+        <ul>
+            <li>
+                <a href="{{ $file->url }}" target="_blank">{{ $file->name }}</a>
+            </li>
+        </ul>
+        @endforeach
+    </div>
+    <hr>
     @include('lists.list-of-lesson-homeworks')
 </div>
 @endsection

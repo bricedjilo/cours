@@ -1,22 +1,35 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-6 col-md-12 col-sm-12 mb-2">
+            <a href="{{ Route('admin-home') }}">Admin home</a>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-lg-6 col-md-12 col-sm-12 mb-2">
+            <h2>Modifier ce compte</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6 col-md-12 col-sm-12">
             <div class="card">
-                <div class="card-header">
-                    {{ __('Ajouter un compte') }}
-                </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('admin-update-account', ['user' => $user]) }}">
                         @csrf
                         @include('error-success-message')
                         <div class="form-group row">
-                            <label for="first_name" class="col-md-4 col-form-label text-md-right">{{ __('Prenom') }}
+                            <label for="first_name" class="col-md-3 col-form-label text-md-right">{{ __('Prenom') }}
                             </label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <input id="first_name" type="text"
                                     class="form-control @error('first_name') is-invalid @enderror" name="first_name"
-                                    value="{{ old('first_name') }}" required autocomplete="first_name" autofocus>
+                                    value="{{ $user->first_name }}" required autocomplete="first_name" autofocus>
 
                                 @error('first_name')
                                 <span class="invalid-feedback" role="alert">
@@ -28,13 +41,13 @@
 
                         <div class="form-group row">
                             <label for="last_name"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Nom de Famille') }}
+                                class="col-md-3 col-form-label text-md-right">{{ __('Nom de Famille') }}
                             </label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <input id="last_name" type="text"
                                     class="form-control @error('last_name') is-invalid @enderror" name="last_name"
-                                    value="{{ old('last_name') }}" required autocomplete="last_name" autofocus>
+                                    value="{{ $user->last_name }}" required autocomplete="last_name" autofocus>
 
                                 @error('last_name')
                                 <span class="invalid-feedback" role="alert">
@@ -45,11 +58,11 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail') }}</label>
+                            <label for="email" class="col-md-3 col-form-label text-md-right">{{ __('E-Mail') }}</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                    name="email" value="{{ old('email') }}" required autocomplete="email">
+                                    name="email" value="{{ $user->email }}" required autocomplete="email">
 
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -61,21 +74,21 @@
 
                         <fieldset class="form-group">
                             <div class="row">
-                                <legend class="col-form-label col-md-4 col-sm-2 text-md-right pt-0">
+                                <legend class="col-form-label col-md-3 col-sm-2 text-md-right pt-0">
                                     {{ __('Status') }}
                                 </legend>
-                                <div class="col-md-6 col-sm-10">
-                                    @if(Route::currentRouteName() == 'admin-create-student')
+                                <div class="col-md-9 col-sm-10">
+                                    @if($user->is_student)
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="statut-student"
+                                        <input class="form-check-input" type="radio" name="status" id="status-student"
                                             value="student" checked>
                                         <label class="form-check-label" for="statut-student">
                                             {{ __('Eleve') }}
                                         </label>
                                     </div>
-                                    @elseif(Route::currentRouteName() == 'admin-create-professor')
+                                    @elseif($user->is_teacher)
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="statut-prof"
+                                        <input class="form-check-input" type="radio" name="status" id="status-prof"
                                             value="professor" checked>
                                         <label class="form-check-label" for="statut-prof">
                                             {{ __('Professeur') }}
@@ -83,7 +96,7 @@
                                     </div>
                                     @else
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="statut-staff"
+                                        <input class="form-check-input" type="radio" name="status" id="status-staff"
                                             value="staff" checked>
                                         <label class="form-check-label" for="statut-staff">
                                             {{ __('Staff') }}
@@ -100,15 +113,16 @@
                             </div>
                         </fieldset>
 
-                        @if(Route::currentRouteName() == 'admin-create-professor')
+                        @if($user->is_admin)
                         <fieldset class="form-group">
                             <div class="row">
-                                <label class="col-form-label col-md-4 col-sm-2 text-md-right pt-0" for="is-admin">
+                                <label class="col-form-label col-md-3 col-sm-2 text-md-right pt-0" for="is-admin">
                                     {{ __('Administrateur') }}
                                 </label>
-                                <div class="col-md-6 col-sm-10">
+                                <div class="col-md-9 col-sm-10">
                                     <div class="form-check">
-                                        <input type="checkbox" name='is_admin' class="form-check-input" id="is_admin">
+                                        <input type="checkbox" name='is_admin' class="form-check-input" id="is_admin"
+                                            checked>
                                     </div>
                                 </div>
                                 @error('is_admin')
@@ -120,7 +134,23 @@
                         </fieldset>
                         @endif
 
-                        <div class="form-group row">
+                        <fieldset class="form-group">
+                            <div class="row">
+                                <label class="col-form-label col-md-3 col-sm-2 text-md-right pt-0" for="is-admin">
+                                    {{ __('Classes') }}
+                                </label>
+                                <div class="col-md-9 col-sm-10">
+                                    <select class="form-control" id="module-number" name="number">
+                                        <option>Classes</option>
+                                        @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- <div class="form-group row">
                             <label for="password"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Mot de passe') }}</label>
 
@@ -135,9 +165,9 @@
                                 </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="password-confirm"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Confirmez le mot de passe') }}</label>
 
@@ -151,12 +181,13 @@
                                 </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-3">
+                                @method('PUT')
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Enregistrer') }}
+                                    {{ __('Modifier') }}
                                 </button>
                             </div>
                         </div>
@@ -166,3 +197,5 @@
         </div>
     </div>
 </div>
+
+@endsection

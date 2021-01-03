@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-10 col-sm-12 col-xs-12">
+    <div class="row">
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <span class="card-header">
                     Nom:
@@ -27,9 +27,10 @@
                                     <div>{{ __('Eleve') }}</div>
                                     @else
                                     <div>{{ __('Professeur') }}</div>
+                                    @endif
                                     @if ($user->is_admin)
                                     <div>{{ __('Administrateur') }}</div>
-                                    @endif
+                                    <div><a href="{{ route('admin-home') }}">{{__('Page administrateur')}}</a></div>
                                     @endif
                                 </td>
                             </tr>
