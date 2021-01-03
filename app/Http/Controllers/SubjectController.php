@@ -53,7 +53,6 @@ class SubjectController extends Controller
      */
     public function show(Subject $subject)
     {
-        // dd($subject->modules);
         return view('show.show-subject', [
             'subject' => $subject,
             'user' => Auth::user(),

@@ -26,22 +26,25 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // dd($user);
+        $classes = [];
         if ($user->is_teacher) {
-            // dd($user);
             $classes = $user->classes;
             return view('home-teacher', [
-                'classe' => $classes ? $classes : [],
+                'classe' => $classes,
                 'user' => $user,
             ]);
         } else {
-            $class = $user->classes->first();
-            $class_name = $class->name;
-            $class_group = Classe::where('name', $class_name)->pluck('id')->all();
-            $subjects = Subject::whereIn('classe_id', $class_group)->get();
+            $class = [];
+            $subjects = [];
+            if (!empty($user->class)) {
+                $class = $user->classes->first();
+                $class_name = $class->name;
+                $class_group = Classe::where('name', $class_name)->pluck('id')->all();
+                $subjects = Subject::whereIn('classe_id', $class_group)->get();
+            }
             return view('home-student', [
                 'class' => $class,
-                'subjects' => $subjects ? $subjects : [],
+                'subjects' => $subjects,
                 'user' => $user,
             ]);
         }

@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController as UserController;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Storage;
 
@@ -84,7 +85,11 @@ class AdminController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.edit-account', ['user' => $user]);
+
+        return view('admin.edit-account', [
+            'user' => $user,
+            'classes' => DB::table('classes')->distinct('name')->get(),
+        ]);
     }
 
     /**
@@ -164,7 +169,6 @@ class AdminController extends Controller
             return view('admin.show-results', ['users' => $users]);
         } catch (Exception $e) {
             return redirect()->back()->withErrors("Ce compte n'existe pas ou alors une erreur s'est produite.");
-            // return redirect()->back()->withErrors($e->getMessage());
         }
     }
 }

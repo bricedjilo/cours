@@ -23,10 +23,10 @@
                         @csrf
                         @include('error-success-message')
                         <div class="form-group row">
-                            <label for="first_name" class="col-md-4 col-form-label text-md-right">{{ __('Prenom') }}
+                            <label for="first_name" class="col-md-3 col-form-label text-md-right">{{ __('Prenom') }}
                             </label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <input id="first_name" type="text"
                                     class="form-control @error('first_name') is-invalid @enderror" name="first_name"
                                     value="{{ $user->first_name }}" required autocomplete="first_name" autofocus>
@@ -41,10 +41,10 @@
 
                         <div class="form-group row">
                             <label for="last_name"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Nom de Famille') }}
+                                class="col-md-3 col-form-label text-md-right">{{ __('Nom de Famille') }}
                             </label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <input id="last_name" type="text"
                                     class="form-control @error('last_name') is-invalid @enderror" name="last_name"
                                     value="{{ $user->last_name }}" required autocomplete="last_name" autofocus>
@@ -58,9 +58,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail') }}</label>
+                            <label for="email" class="col-md-3 col-form-label text-md-right">{{ __('E-Mail') }}</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
                                     name="email" value="{{ $user->email }}" required autocomplete="email">
 
@@ -74,10 +74,10 @@
 
                         <fieldset class="form-group">
                             <div class="row">
-                                <legend class="col-form-label col-md-4 col-sm-2 text-md-right pt-0">
+                                <legend class="col-form-label col-md-3 col-sm-2 text-md-right pt-0">
                                     {{ __('Status') }}
                                 </legend>
-                                <div class="col-md-6 col-sm-10">
+                                <div class="col-md-9 col-sm-10">
                                     @if($user->is_student)
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="status" id="status-student"
@@ -116,10 +116,10 @@
                         @if($user->is_admin)
                         <fieldset class="form-group">
                             <div class="row">
-                                <label class="col-form-label col-md-4 col-sm-2 text-md-right pt-0" for="is-admin">
+                                <label class="col-form-label col-md-3 col-sm-2 text-md-right pt-0" for="is-admin">
                                     {{ __('Administrateur') }}
                                 </label>
-                                <div class="col-md-6 col-sm-10">
+                                <div class="col-md-9 col-sm-10">
                                     <div class="form-check">
                                         <input type="checkbox" name='is_admin' class="form-check-input" id="is_admin"
                                             checked>
@@ -133,6 +133,22 @@
                             </div>
                         </fieldset>
                         @endif
+
+                        <fieldset class="form-group">
+                            <div class="row">
+                                <label class="col-form-label col-md-3 col-sm-2 text-md-right pt-0" for="is-admin">
+                                    {{ __('Classes') }}
+                                </label>
+                                <div class="col-md-9 col-sm-10">
+                                    <select class="form-control" id="module-number" name="number">
+                                        <option>Classes</option>
+                                        @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
 
                         <!-- <div class="form-group row">
                             <label for="password"
@@ -168,7 +184,7 @@
                         </div> -->
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-3">
                                 @method('PUT')
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Modifier') }}
